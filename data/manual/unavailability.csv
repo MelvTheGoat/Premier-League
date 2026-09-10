@@ -1,0 +1,9 @@
+# Key-player availability, the hardest input to automate and therefore the
+# one that starts as a hand-maintained file. One row per club per gameweek.
+#   players_out     first-team squad members unavailable (injury, suspension,
+#                   international duty)
+#   key_players_out how many of those are regular starters
+# Rows may be omitted; a club with no row for a gameweek is treated as
+# unknown rather than as fully fit, so an empty file simply removes the
+# feature rather than biasing it.
+season,matchday,team,players_out,key_players_out,notes,source

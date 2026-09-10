@@ -1,0 +1,49 @@
+# Managerial spells, used to build the "new manager" features.
+# start_date is the day the manager took charge; end_date is their last day
+# (blank = still in post). Where only the month is known the date is set to a
+# plausible day within it and source is marked manual:approx - day-level
+# precision does not change a "games under this manager" feature materially.
+# Coverage: 2025/26 onward. Adding older spells strengthens the effect the
+# model can learn; see README, "Manually maintained data".
+team,manager,start_date,end_date,source
+Arsenal,Mikel Arteta,2019-12-20,,manual
+Aston Villa,Unai Emery,2022-11-01,,manual
+Bournemouth,Andoni Iraola,2023-06-19,2026-06-14,manual
+Bournemouth,Marco Rose,2026-06-15,,manual:approx
+Brentford,Keith Andrews,2025-06-27,,manual
+Brighton & Hove Albion,Fabian Hurzeler,2024-06-15,,manual
+Burnley,Scott Parker,2024-07-01,2026-04-30,manual
+Chelsea,Enzo Maresca,2024-06-03,2026-01-01,manual
+Chelsea,Liam Rosenior,2026-01-06,2026-04-22,manual
+Chelsea,Calum McFarlane,2026-04-22,2026-06-30,manual
+Chelsea,Xabi Alonso,2026-07-01,,manual
+Coventry City,Frank Lampard,2023-11-29,,manual
+Crystal Palace,Oliver Glasner,2024-02-19,2026-06-14,manual
+Crystal Palace,Pierre Sage,2026-06-15,,manual:approx
+Everton,David Moyes,2025-01-11,,manual
+Fulham,Marco Silva,2021-07-01,2026-06-14,manual
+Fulham,Alvaro Arbeloa,2026-06-15,,manual:approx
+Hull City,Sergej Jakirovic,2025-06-01,,manual:approx
+Ipswich Town,Kieran McKenna,2021-12-16,2026-06-14,manual
+Ipswich Town,Gary O'Neil,2026-06-15,,manual:approx
+Leeds United,Daniel Farke,2023-07-04,,manual
+Liverpool,Arne Slot,2024-06-01,2026-06-14,manual
+Liverpool,Andoni Iraola,2026-06-15,,manual:approx
+Manchester City,Pep Guardiola,2016-07-01,2026-06-14,manual
+Manchester City,Enzo Maresca,2026-06-15,,manual:approx
+Manchester United,Ruben Amorim,2024-11-11,2026-01-05,manual
+Manchester United,Michael Carrick,2026-01-06,,manual
+Newcastle United,Eddie Howe,2021-11-08,2026-06-14,manual
+Newcastle United,Matthias Jaissle,2026-06-15,,manual:approx
+Nottingham Forest,Nuno Espirito Santo,2023-12-20,2025-09-09,manual
+Nottingham Forest,Ange Postecoglou,2025-09-09,2025-10-18,manual
+Nottingham Forest,Sean Dyche,2025-10-21,2026-02-12,manual
+Nottingham Forest,Igor Tudor,2026-02-13,2026-06-14,manual
+Nottingham Forest,Oliver Glasner,2026-06-15,,manual:approx
+Sunderland,Regis Le Bris,2024-07-05,,manual
+Tottenham Hotspur,Thomas Frank,2025-06-12,2026-02-28,manual
+Tottenham Hotspur,Roberto De Zerbi,2026-03-01,,manual:approx
+West Ham United,Graham Potter,2025-01-09,2025-09-27,manual
+West Ham United,Nuno Espirito Santo,2025-09-27,,manual
+Wolverhampton Wanderers,Vitor Pereira,2024-12-19,2025-11-02,manual
+Wolverhampton Wanderers,Rob Edwards,2025-11-03,,manual

@@ -1,0 +1,14 @@
+# Clubs carrying a midweek European commitment, by season. Feeds the
+# fixture-congestion and rotation-risk features: a club playing Thursday
+# night in the Europa League approaches Sunday differently to one that is
+# not.
+season,team,competition
+2026-27,Arsenal,champions_league
+2026-27,Manchester City,champions_league
+2026-27,Manchester United,champions_league
+2026-27,Aston Villa,champions_league
+2026-27,Liverpool,champions_league
+2026-27,Bournemouth,europa_league
+2026-27,Sunderland,europa_league
+2026-27,Crystal Palace,europa_league
+2026-27,Brighton & Hove Albion,conference_league
