@@ -1,0 +1,529 @@
+season,team,overall,attack,midfield,defence,top11_mean,squad_value,source
+2010-11,Arsenal,82.419,82.6,82.6,81.0,83.091,,fifa_model:player_stats_2011.csv
+2010-11,Aston Villa,79.224,79.0,77.6,78.4,79.727,,fifa_model:player_stats_2011.csv
+2010-11,Barnsley,66.324,66.4,66.25,65.6,67.273,,fifa_model:player_stats_2011.csv
+2010-11,Birmingham City,77.022,76.4,77.6,76.0,77.545,,fifa_model:player_stats_2011.csv
+2010-11,Blackburn Rovers,75.988,75.8,75.2,75.4,76.455,,fifa_model:player_stats_2011.csv
+2010-11,Blackpool,69.973,69.8,69.4,69.6,70.455,,fifa_model:player_stats_2011.csv
+2010-11,Bolton Wanderers,76.01,75.4,75.2,74.6,76.636,,fifa_model:player_stats_2011.csv
+2010-11,Bristol City,69.082,67.0,67.4,68.8,69.545,,fifa_model:player_stats_2011.csv
+2010-11,Burnley,71.082,69.2,70.6,71.4,71.545,,fifa_model:player_stats_2011.csv
+2010-11,Cardiff City,71.302,74.4,69.6,66.8,72.182,,fifa_model:player_stats_2011.csv
+2010-11,Chelsea,83.538,80.4,83.8,83.0,84.455,,fifa_model:player_stats_2011.csv
+2010-11,Coventry City,66.883,67.0,66.4,64.8,67.818,,fifa_model:player_stats_2011.csv
+2010-11,Crystal Palace,68.673,65.4,67.6,68.0,69.455,,fifa_model:player_stats_2011.csv
+2010-11,Derby County,68.872,69.0,66.2,68.2,69.545,,fifa_model:player_stats_2011.csv
+2010-11,Doncaster Rovers,65.456,65.25,66.6,64.4,66.273,,fifa_model:player_stats_2011.csv
+2010-11,Everton,79.029,75.2,80.0,77.4,79.727,,fifa_model:player_stats_2011.csv
+2010-11,Fulham,77.666,77.2,76.6,77.0,78.273,,fifa_model:player_stats_2011.csv
+2010-11,Hull City,70.815,69.0,71.8,70.75,71.636,,fifa_model:player_stats_2011.csv
+2010-11,Ipswich Town,67.376,67.5,66.8,61.0,68.909,,fifa_model:player_stats_2011.csv
+2010-11,Leeds United,68.123,69.0,65.8,67.2,68.455,,fifa_model:player_stats_2011.csv
+2010-11,Leicester City,68.04,67.8,65.4,69.4,68.636,,fifa_model:player_stats_2011.csv
+2010-11,Liverpool,81.16,79.0,80.6,80.6,82.0,,fifa_model:player_stats_2011.csv
+2010-11,Manchester City,82.441,82.2,82.2,80.6,82.909,,fifa_model:player_stats_2011.csv
+2010-11,Manchester United,82.999,83.0,81.6,82.2,83.727,,fifa_model:player_stats_2011.csv
+2010-11,Middlesbrough,71.048,71.8,70.6,70.0,71.818,,fifa_model:player_stats_2011.csv
+2010-11,Millwall,64.752,64.4,63.4,64.6,65.182,,fifa_model:player_stats_2011.csv
+2010-11,Newcastle United,74.737,74.2,74.6,74.6,75.182,,fifa_model:player_stats_2011.csv
+2010-11,Norwich City,66.831,66.0,67.0,66.2,67.273,,fifa_model:player_stats_2011.csv
+2010-11,Nottingham Forest,69.947,70.0,69.4,69.2,70.545,,fifa_model:player_stats_2011.csv
+2010-11,Portsmouth,70.457,71.0,71.4,65.66666666666667,71.182,,fifa_model:player_stats_2011.csv
+2010-11,Preston North End,67.299,66.25,67.2,66.6,67.727,,fifa_model:player_stats_2011.csv
+2010-11,Queens Park Rangers,69.411,69.8,69.8,67.8,69.909,,fifa_model:player_stats_2011.csv
+2010-11,Reading,67.336,66.8,65.0,67.0,67.909,,fifa_model:player_stats_2011.csv
+2010-11,Scunthorpe United,63.925,62.25,57.25,65.2,64.636,,fifa_model:player_stats_2011.csv
+2010-11,Sheffield United,68.95,69.0,66.0,69.6,69.636,,fifa_model:player_stats_2011.csv
+2010-11,Stoke City,74.947,74.8,73.2,74.2,75.545,,fifa_model:player_stats_2011.csv
+2010-11,Sunderland,75.662,73.2,74.0,75.8,76.182,,fifa_model:player_stats_2011.csv
+2010-11,Swansea City,68.898,69.8,67.2,66.8,69.455,,fifa_model:player_stats_2011.csv
+2010-11,Tottenham Hotspur,80.91,79.6,81.6,79.2,81.364,,fifa_model:player_stats_2011.csv
+2010-11,Watford,66.531,63.0,66.0,67.2,67.273,,fifa_model:player_stats_2011.csv
+2010-11,West Bromwich Albion,73.632,72.4,69.8,74.4,74.182,,fifa_model:player_stats_2011.csv
+2010-11,West Ham United,75.928,74.4,76.4,74.2,76.455,,fifa_model:player_stats_2011.csv
+2010-11,Wigan Athletic,73.205,72.75,72.0,72.8,73.636,,fifa_model:player_stats_2011.csv
+2010-11,Wolverhampton Wanderers,73.782,74.2,72.4,73.2,74.182,,fifa_model:player_stats_2011.csv
+2011-12,Arsenal,81.557,82.0,80.6,80.4,82.182,103200010.0,fifa_model:player_stats_2012.csv
+2011-12,Aston Villa,76.078,71.4,75.0,75.6,76.818,98800002.0,fifa_model:player_stats_2012.csv
+2011-12,Barnsley,65.353,59.8,66.0,64.6,66.091,2525015.0,fifa_model:player_stats_2012.csv
+2011-12,Birmingham City,72.059,67.8,71.8,73.0,72.727,19100012.0,fifa_model:player_stats_2012.csv
+2011-12,Blackburn Rovers,74.774,74.2,71.8,74.2,75.727,75075006.0,fifa_model:player_stats_2012.csv
+2011-12,Blackpool,69.771,69.8,67.8,69.6,70.273,16625011.0,fifa_model:player_stats_2012.csv
+2011-12,Bolton Wanderers,75.018,72.8,76.4,72.6,75.455,58728005.0,fifa_model:player_stats_2012.csv
+2011-12,Brighton & Hove Albion,68.097,67.25,69.2,66.0,68.545,16665008.0,fifa_model:player_stats_2012.csv
+2011-12,Bristol City,67.501,68.2,66.4,66.0,67.909,5603014.0,fifa_model:player_stats_2012.csv
+2011-12,Burnley,68.995,69.2,69.0,66.8,69.636,16728011.0,fifa_model:player_stats_2012.csv
+2011-12,Cardiff City,69.246,66.8,69.4,68.2,69.909,8250011.0,fifa_model:player_stats_2012.csv
+2011-12,Chelsea,83.156,83.6,81.4,82.4,83.909,90275012.0,fifa_model:player_stats_2012.csv
+2011-12,Coventry City,65.622,65.2,64.4,65.2,66.182,5678013.0,fifa_model:player_stats_2012.csv
+2011-12,Crystal Palace,69.452,67.8,67.8,69.2,70.182,13975012.0,fifa_model:player_stats_2012.csv
+2011-12,Derby County,70.074,68.2,70.0,70.4,70.727,12125014.0,fifa_model:player_stats_2012.csv
+2011-12,Doncaster Rovers,67.097,68.4,66.6,64.8,67.545,11498005.0,fifa_model:player_stats_2012.csv
+2011-12,Everton,77.164,71.6,77.4,76.8,77.727,85303004.0,fifa_model:player_stats_2012.csv
+2011-12,Fulham,77.123,76.2,77.0,75.0,77.818,93203000.0,fifa_model:player_stats_2012.csv
+2011-12,Hull City,68.408,67.4,68.8,67.4,68.818,18753002.0,fifa_model:player_stats_2012.csv
+2011-12,Ipswich Town,67.636,67.25,68.8,65.0,68.273,7550010.0,fifa_model:player_stats_2012.csv
+2011-12,Leeds United,70.299,70.8,70.0,67.4,70.727,14815012.0,fifa_model:player_stats_2012.csv
+2011-12,Leicester City,70.913,71.0,68.6,70.8,71.455,28575008.0,fifa_model:player_stats_2012.csv
+2011-12,Liverpool,81.22,79.8,81.0,80.2,82.0,109450009.0,fifa_model:player_stats_2012.csv
+2011-12,Manchester City,83.838,83.8,84.4,81.8,84.455,89575011.0,fifa_model:player_stats_2012.csv
+2011-12,Manchester United,83.576,81.8,83.0,82.6,84.273,178275010.0,fifa_model:player_stats_2012.csv
+2011-12,Middlesbrough,69.254,70.0,69.4,67.4,69.727,34675000.0,fifa_model:player_stats_2012.csv
+2011-12,Millwall,66.737,61.0,66.6,66.0,67.182,7940008.0,fifa_model:player_stats_2012.csv
+2011-12,Newcastle United,77.64,77.2,77.0,76.0,78.364,113228005.0,fifa_model:player_stats_2012.csv
+2011-12,Norwich City,71.801,69.6,71.6,70.2,72.273,31100005.0,fifa_model:player_stats_2012.csv
+2011-12,Nottingham Forest,69.303,67.2,68.0,70.2,69.818,12825012.0,fifa_model:player_stats_2012.csv
+2011-12,Peterborough United,65.071,63.0,65.4,64.4,65.455,6070011.0,fifa_model:player_stats_2012.csv
+2011-12,Portsmouth,69.306,69.2,69.6,68.0,69.818,16425010.0,fifa_model:player_stats_2012.csv
+2011-12,Queens Park Rangers,76.063,75.2,76.4,74.0,76.818,42653005.0,fifa_model:player_stats_2012.csv
+2011-12,Reading,68.696,67.0,69.2,67.4,69.273,12195009.0,fifa_model:player_stats_2012.csv
+2011-12,Southampton,70.584,70.2,72.0,67.8,71.091,14775009.0,fifa_model:player_stats_2012.csv
+2011-12,Stoke City,76.378,75.4,76.8,75.8,76.818,50028008.0,fifa_model:player_stats_2012.csv
+2011-12,Sunderland,75.88,70.0,77.0,74.8,76.364,62150008.0,fifa_model:player_stats_2012.csv
+2011-12,Swansea City,73.524,72.8,72.6,70.8,74.091,25275012.0,fifa_model:player_stats_2012.csv
+2011-12,Tottenham Hotspur,81.823,73.2,84.2,79.6,82.455,199781008.0,fifa_model:player_stats_2012.csv
+2011-12,Watford,67.389,64.66666666666667,67.0,68.2,68.091,15325005.0,fifa_model:player_stats_2012.csv
+2011-12,West Bromwich Albion,74.494,70.2,74.8,72.6,75.091,71600003.0,fifa_model:player_stats_2012.csv
+2011-12,West Ham United,73.336,72.2,73.6,71.8,73.909,21400012.0,fifa_model:player_stats_2012.csv
+2011-12,Wigan Athletic,72.756,71.4,72.2,71.8,73.273,41703008.0,fifa_model:player_stats_2012.csv
+2011-12,Wolverhampton Wanderers,74.37,70.2,73.6,73.8,75.0,44810006.0,fifa_model:player_stats_2012.csv
+2012-13,Arsenal,80.752,80.2,81.2,80.0,81.182,72175011.0,fifa_model:player_stats_2013.csv
+2012-13,Aston Villa,75.389,74.0,73.6,74.2,76.091,14878012.0,fifa_model:player_stats_2013.csv
+2012-13,Barnsley,64.733,58.4,65.4,64.4,65.455,4525010.0,fifa_model:player_stats_2013.csv
+2012-13,Birmingham City,69.441,69.25,68.8,68.75,69.909,4615014.0,fifa_model:player_stats_2013.csv
+2012-13,Blackburn Rovers,70.572,68.8,70.4,69.6,71.182,11225012.0,fifa_model:player_stats_2013.csv
+2012-13,Blackpool,69.16,69.2,67.0,69.0,69.636,10030009.0,fifa_model:player_stats_2013.csv
+2012-13,Bolton Wanderers,71.127,66.4,72.0,70.6,71.545,14300008.0,fifa_model:player_stats_2013.csv
+2012-13,Brighton & Hove Albion,70.793,71.0,69.2,69.6,71.455,3275014.0,fifa_model:player_stats_2013.csv
+2012-13,Bristol City,67.09,65.4,67.2,66.2,67.364,12950005.0,fifa_model:player_stats_2013.csv
+2012-13,Burnley,66.541,66.5,66.8,65.0,67.0,3060014.0,fifa_model:player_stats_2013.csv
+2012-13,Cardiff City,70.988,70.2,70.6,69.2,71.455,10150008.0,fifa_model:player_stats_2013.csv
+2012-13,Charlton Athletic,65.91,66.25,65.4,65.6,66.364,6975006.0,fifa_model:player_stats_2013.csv
+2012-13,Chelsea,82.325,75.33333333333333,83.0,82.0,83.0,67103009.0,fifa_model:player_stats_2013.csv
+2012-13,Crystal Palace,70.07,69.6,69.8,67.6,70.636,4550014.0,fifa_model:player_stats_2013.csv
+2012-13,Derby County,69.344,66.0,69.8,69.8,70.091,5625016.0,fifa_model:player_stats_2013.csv
+2012-13,Everton,77.935,70.0,78.8,78.0,79.0,19100012.0,fifa_model:player_stats_2013.csv
+2012-13,Fulham,77.718,74.2,78.2,75.8,78.455,44053010.0,fifa_model:player_stats_2013.csv
+2012-13,Huddersfield Town,66.91,67.5,66.8,65.8,67.364,5028012.0,fifa_model:player_stats_2013.csv
+2012-13,Hull City,69.722,67.8,70.4,68.4,70.182,14100008.0,fifa_model:player_stats_2013.csv
+2012-13,Ipswich Town,67.441,66.8,66.4,67.6,67.909,4000016.0,fifa_model:player_stats_2013.csv
+2012-13,Leeds United,69.082,69.8,66.2,68.6,69.545,2375016.0,fifa_model:player_stats_2013.csv
+2012-13,Leicester City,69.303,68.8,68.6,67.8,69.818,9750013.0,fifa_model:player_stats_2013.csv
+2012-13,Liverpool,80.224,78.6,79.4,79.8,81.091,39525013.0,fifa_model:player_stats_2013.csv
+2012-13,Manchester City,83.546,80.8,83.8,81.8,84.273,66975008.0,fifa_model:player_stats_2013.csv
+2012-13,Manchester United,83.325,84.25,82.8,81.8,84.0,157325003.0,fifa_model:player_stats_2013.csv
+2012-13,Middlesbrough,69.1,68.4,69.4,67.8,69.636,15150007.0,fifa_model:player_stats_2013.csv
+2012-13,Millwall,67.295,65.4,67.4,67.0,67.636,10268004.0,fifa_model:player_stats_2013.csv
+2012-13,Newcastle United,77.92,75.0,77.4,77.0,78.636,54903009.0,fifa_model:player_stats_2013.csv
+2012-13,Norwich City,73.771,72.66666666666667,74.0,73.0,74.273,16100013.0,fifa_model:player_stats_2013.csv
+2012-13,Nottingham Forest,69.501,68.8,69.8,68.4,69.909,6535013.0,fifa_model:player_stats_2013.csv
+2012-13,Peterborough United,65.038,65.0,65.4,65.0,65.364,6125011.0,fifa_model:player_stats_2013.csv
+2012-13,Queens Park Rangers,76.512,74.2,76.0,74.4,77.182,33353008.0,fifa_model:player_stats_2013.csv
+2012-13,Reading,71.97,70.4,70.8,72.0,72.364,15340010.0,fifa_model:player_stats_2013.csv
+2012-13,Sheffield Wednesday,67.453,66.66666666666667,67.8,66.2,67.818,1640015.0,fifa_model:player_stats_2013.csv
+2012-13,Southampton,73.98,73.5,75.8,71.8,74.636,28320012.0,fifa_model:player_stats_2013.csv
+2012-13,Stoke City,75.46,71.8,74.8,75.0,76.0,30056009.0,fifa_model:player_stats_2013.csv
+2012-13,Sunderland,75.46,73.0,76.8,74.2,76.0,17575012.0,fifa_model:player_stats_2013.csv
+2012-13,Swansea City,75.486,75.0,73.6,74.2,76.273,24775008.0,fifa_model:player_stats_2013.csv
+2012-13,Tottenham Hotspur,80.917,74.4,80.0,79.6,81.545,34803011.0,fifa_model:player_stats_2013.csv
+2012-13,Watford,69.063,68.66666666666667,69.4,68.2,69.455,11990006.0,fifa_model:player_stats_2013.csv
+2012-13,West Bromwich Albion,74.745,72.75,75.4,72.0,75.364,16100011.0,fifa_model:player_stats_2013.csv
+2012-13,West Ham United,74.662,72.4,75.2,73.2,75.182,17928011.0,fifa_model:player_stats_2013.csv
+2012-13,Wigan Athletic,74.629,72.8,73.8,74.4,75.091,36678007.0,fifa_model:player_stats_2013.csv
+2012-13,Wolverhampton Wanderers,70.782,69.2,71.2,69.6,71.182,5600014.0,fifa_model:player_stats_2013.csv
+2013-14,Arsenal,81.351,74.0,83.2,80.2,81.909,107700008.0,fifa_model:player_stats_2014.csv
+2013-14,Aston Villa,74.726,74.6,71.8,74.4,75.273,36773001.0,fifa_model:player_stats_2014.csv
+2013-14,Barnsley,64.119,55.0,65.8,65.2,65.545,3420011.0,fifa_model:player_stats_2014.csv
+2013-14,Birmingham City,67.423,65.8,67.4,65.6,67.818,9065006.0,fifa_model:player_stats_2014.csv
+2013-14,Blackburn Rovers,67.722,68.0,67.8,66.0,68.182,12550004.0,fifa_model:player_stats_2014.csv
+2013-14,Blackpool,67.32,67.2,67.0,65.2,67.727,5745010.0,fifa_model:player_stats_2014.csv
+2013-14,Bolton Wanderers,71.25,67.0,72.6,69.6,71.636,25220000.0,fifa_model:player_stats_2014.csv
+2013-14,Bournemouth,67.045,67.0,67.4,66.2,67.364,4850011.0,fifa_model:player_stats_2014.csv
+2013-14,Brighton & Hove Albion,70.145,70.8,67.4,69.4,70.636,13890007.0,fifa_model:player_stats_2014.csv
+2013-14,Burnley,69.793,70.0,70.2,68.0,70.455,3895014.0,fifa_model:player_stats_2014.csv
+2013-14,Cardiff City,72.756,70.33333333333333,72.8,72.4,73.273,12525012.0,fifa_model:player_stats_2014.csv
+2013-14,Charlton Athletic,66.205,65.6,65.0,65.2,66.545,8375004.0,fifa_model:player_stats_2014.csv
+2013-14,Chelsea,82.415,67.0,83.4,81.8,83.0,130953004.0,fifa_model:player_stats_2014.csv
+2013-14,Crystal Palace,72.359,69.0,73.0,71.0,72.727,17160008.0,fifa_model:player_stats_2014.csv
+2013-14,Derby County,69.775,67.75,70.6,69.6,70.364,13675004.0,fifa_model:player_stats_2014.csv
+2013-14,Doncaster Rovers,66.765,66.66666666666667,65.8,66.4,67.273,8505003.0,fifa_model:player_stats_2014.csv
+2013-14,Everton,78.943,77.2,79.2,77.8,79.455,59975007.0,fifa_model:player_stats_2014.csv
+2013-14,Fulham,75.734,69.8,75.8,75.4,76.091,30815004.0,fifa_model:player_stats_2014.csv
+2013-14,Huddersfield Town,67.198,67.33333333333333,67.8,65.4,67.455,11620001.0,fifa_model:player_stats_2014.csv
+2013-14,Hull City,73.093,72.6,72.6,71.6,73.818,27878004.0,fifa_model:player_stats_2014.csv
+2013-14,Ipswich Town,68.344,67.0,68.2,68.2,68.727,9350008.0,fifa_model:player_stats_2014.csv
+2013-14,Leeds United,68.018,66.4,66.8,68.0,68.455,7070009.0,fifa_model:player_stats_2014.csv
+2013-14,Leicester City,69.97,70.0,68.6,69.6,70.364,14850006.0,fifa_model:player_stats_2014.csv
+2013-14,Liverpool,80.939,79.8,79.8,80.2,81.727,88000004.0,fifa_model:player_stats_2014.csv
+2013-14,Manchester City,83.576,80.4,84.4,81.2,84.273,177250005.0,fifa_model:player_stats_2014.csv
+2013-14,Manchester United,82.67,84.0,82.2,80.4,83.364,201500008.0,fifa_model:player_stats_2014.csv
+2013-14,Middlesbrough,69.883,71.0,69.4,70.0,70.455,13875005.0,fifa_model:player_stats_2014.csv
+2013-14,Millwall,67.936,68.8,67.4,66.4,68.273,11400000.0,fifa_model:player_stats_2014.csv
+2013-14,Newcastle United,76.812,72.6,76.2,77.2,77.545,45300004.0,fifa_model:player_stats_2014.csv
+2013-14,Norwich City,74.685,72.5,74.8,74.0,75.0,40528003.0,fifa_model:player_stats_2014.csv
+2013-14,Nottingham Forest,70.157,69.2,71.0,68.6,70.545,14720005.0,fifa_model:player_stats_2014.csv
+2013-14,Queens Park Rangers,74.438,72.0,75.0,74.0,74.818,31575001.0,fifa_model:player_stats_2014.csv
+2013-14,Reading,71.04,69.66666666666667,71.8,69.0,71.636,18450009.0,fifa_model:player_stats_2014.csv
+2013-14,Sheffield Wednesday,67.393,65.0,66.2,67.6,67.818,9895005.0,fifa_model:player_stats_2014.csv
+2013-14,Southampton,75.613,69.0,77.2,74.6,76.455,16903013.0,fifa_model:player_stats_2014.csv
+2013-14,Stoke City,74.913,74.5,74.6,74.0,75.455,32153009.0,fifa_model:player_stats_2014.csv
+2013-14,Sunderland,74.561,74.0,75.4,73.0,74.909,26450010.0,fifa_model:player_stats_2014.csv
+2013-14,Swansea City,76.887,75.8,75.4,75.6,77.545,66025004.0,fifa_model:player_stats_2014.csv
+2013-14,Tottenham Hotspur,80.494,74.6,81.0,78.6,81.091,89178005.0,fifa_model:player_stats_2014.csv
+2013-14,Watford,70.25,69.5,70.0,70.6,70.636,12078007.0,fifa_model:player_stats_2014.csv
+2013-14,West Bromwich Albion,74.756,71.25,76.2,72.6,75.273,38800006.0,fifa_model:player_stats_2014.csv
+2013-14,West Ham United,75.067,74.66666666666667,75.6,73.6,75.545,36378003.0,fifa_model:player_stats_2014.csv
+2013-14,Wigan Athletic,72.471,69.25,72.4,71.6,72.909,25075004.0,fifa_model:player_stats_2014.csv
+2013-14,Yeovil Town,63.5,64.0,62.75,63.5,63.5,2730003.0,fifa_model:player_stats_2014.csv
+2014-15,Arsenal,81.449,81.0,82.8,79.6,82.091,307200000.0,fifa_model:player_stats_2015.csv
+2014-15,Aston Villa,75.471,75.0,74.8,74.8,75.909,101000000.0,fifa_model:player_stats_2015.csv
+2014-15,Birmingham City,67.64,65.6,67.6,66.8,68.0,20450000.0,fifa_model:player_stats_2015.csv
+2014-15,Blackburn Rovers,68.846,68.5,68.8,67.2,69.273,25525000.0,fifa_model:player_stats_2015.csv
+2014-15,Blackpool,62.045,64.0,59.75,55.666666666666664,62.636,9075000.0,fifa_model:player_stats_2015.csv
+2014-15,Bolton Wanderers,69.097,66.75,69.6,67.8,69.545,25750000.0,fifa_model:player_stats_2015.csv
+2014-15,Bournemouth,69.91,68.8,69.8,67.8,70.364,32050000.0,fifa_model:player_stats_2015.csv
+2014-15,Brentford,65.574,64.0,67.8,63.0,66.0,11950000.0,fifa_model:player_stats_2015.csv
+2014-15,Brighton & Hove Albion,68.0,61.8,67.4,67.8,68.364,20000000.0,fifa_model:player_stats_2015.csv
+2014-15,Burnley,71.093,69.8,70.4,71.0,71.455,40875000.0,fifa_model:player_stats_2015.csv
+2014-15,Cardiff City,70.078,66.8,69.2,70.2,70.818,33150000.0,fifa_model:player_stats_2015.csv
+2014-15,Charlton Athletic,68.543,66.66666666666667,70.0,67.0,69.091,18900000.0,fifa_model:player_stats_2015.csv
+2014-15,Chelsea,83.1,75.33333333333333,84.4,81.4,84.0,377475000.0,fifa_model:player_stats_2015.csv
+2014-15,Crystal Palace,73.985,72.2,73.8,74.0,74.364,69200000.0,fifa_model:player_stats_2015.csv
+2014-15,Derby County,70.895,70.6,70.6,70.4,71.364,38100000.0,fifa_model:player_stats_2015.csv
+2014-15,Everton,78.895,77.33333333333333,79.0,78.4,79.364,168300000.0,fifa_model:player_stats_2015.csv
+2014-15,Fulham,71.003,68.2,73.0,69.4,71.818,40350000.0,fifa_model:player_stats_2015.csv
+2014-15,Huddersfield Town,66.431,67.0,66.4,65.4,66.909,15375000.0,fifa_model:player_stats_2015.csv
+2014-15,Hull City,73.351,65.0,74.4,72.8,73.909,69200000.0,fifa_model:player_stats_2015.csv
+2014-15,Ipswich Town,68.112,68.0,66.4,68.6,68.545,23450000.0,fifa_model:player_stats_2015.csv
+2014-15,Leeds United,68.202,66.6,67.8,68.0,68.545,20775000.0,fifa_model:player_stats_2015.csv
+2014-15,Leicester City,72.565,71.2,72.0,72.0,73.0,44750000.0,fifa_model:player_stats_2015.csv
+2014-15,Liverpool,79.617,76.8,80.0,79.0,80.182,208700000.0,fifa_model:player_stats_2015.csv
+2014-15,Manchester City,83.059,79.0,83.6,81.2,83.727,395500000.0,fifa_model:player_stats_2015.csv
+2014-15,Manchester United,82.22,80.75,81.6,77.8,83.0,378100000.0,fifa_model:player_stats_2015.csv
+2014-15,Middlesbrough,70.494,68.25,69.4,71.8,71.091,30975000.0,fifa_model:player_stats_2015.csv
+2014-15,Millwall,67.453,65.25,68.0,66.6,67.818,15450000.0,fifa_model:player_stats_2015.csv
+2014-15,Newcastle United,75.995,70.8,77.0,75.0,76.636,102300000.0,fifa_model:player_stats_2015.csv
+2014-15,Norwich City,73.145,71.66666666666667,73.4,72.0,73.636,62000000.0,fifa_model:player_stats_2015.csv
+2014-15,Nottingham Forest,69.153,68.0,69.8,69.2,69.455,24675000.0,fifa_model:player_stats_2015.csv
+2014-15,Queens Park Rangers,75.426,74.33333333333333,76.2,73.8,75.909,97500000.0,fifa_model:player_stats_2015.csv
+2014-15,Reading,69.018,68.0,69.2,68.6,69.455,25025000.0,fifa_model:player_stats_2015.csv
+2014-15,Rotherham United,65.065,64.0,65.8,64.0,65.364,11525000.0,fifa_model:player_stats_2015.csv
+2014-15,Sheffield Wednesday,68.378,65.0,67.4,67.6,68.818,23550000.0,fifa_model:player_stats_2015.csv
+2014-15,Southampton,76.554,71.5,77.6,76.2,77.091,120750000.0,fifa_model:player_stats_2015.csv
+2014-15,Stoke City,76.228,71.33333333333333,76.4,74.4,76.818,120000000.0,fifa_model:player_stats_2015.csv
+2014-15,Sunderland,75.183,74.5,76.4,72.6,75.818,86600000.0,fifa_model:player_stats_2015.csv
+2014-15,Swansea City,75.411,71.4,75.6,74.6,75.909,95300000.0,fifa_model:player_stats_2015.csv
+2014-15,Tottenham Hotspur,79.055,75.75,78.8,78.0,79.636,194000000.0,fifa_model:player_stats_2015.csv
+2014-15,Watford,70.947,70.25,70.0,70.8,71.545,39825000.0,fifa_model:player_stats_2015.csv
+2014-15,West Bromwich Albion,75.037,73.0,75.6,74.0,75.545,82800000.0,fifa_model:player_stats_2015.csv
+2014-15,West Ham United,75.445,74.2,76.2,72.8,76.0,90100000.0,fifa_model:player_stats_2015.csv
+2014-15,Wigan Athletic,69.973,67.2,70.2,69.0,70.455,29700000.0,fifa_model:player_stats_2015.csv
+2014-15,Wolverhampton Wanderers,68.808,69.0,69.2,67.0,69.455,26350000.0,fifa_model:player_stats_2015.csv
+2015-16,Arsenal,82.733,82.33333333333333,83.4,80.8,83.455,411500000.0,fifa_model:player_stats_2016.csv
+2015-16,Aston Villa,75.419,74.4,75.0,75.8,75.727,93800000.0,fifa_model:player_stats_2016.csv
+2015-16,Birmingham City,69.921,70.0,70.0,69.6,70.273,23900000.0,fifa_model:player_stats_2016.csv
+2015-16,Blackburn Rovers,68.697,68.0,69.6,68.2,69.091,16025003.0,fifa_model:player_stats_2016.csv
+2015-16,Bolton Wanderers,67.891,65.66666666666667,69.0,67.4,68.273,17090001.0,fifa_model:player_stats_2016.csv
+2015-16,Bournemouth,74.194,75.2,72.4,72.6,74.727,65500000.0,fifa_model:player_stats_2016.csv
+2015-16,Brentford,69.336,69.0,68.0,69.4,69.909,24900000.0,fifa_model:player_stats_2016.csv
+2015-16,Brighton & Hove Albion,71.58,69.8,71.2,71.8,72.0,36825000.0,fifa_model:player_stats_2016.csv
+2015-16,Bristol City,69.715,68.0,68.2,71.2,70.364,23945001.0,fifa_model:player_stats_2016.csv
+2015-16,Burnley,72.127,71.0,71.4,72.0,72.545,41325000.0,fifa_model:player_stats_2016.csv
+2015-16,Cardiff City,71.276,68.75,69.8,71.6,71.909,36050000.0,fifa_model:player_stats_2016.csv
+2015-16,Charlton Athletic,70.674,69.0,69.6,72.2,71.091,28175000.0,fifa_model:player_stats_2016.csv
+2015-16,Chelsea,83.325,80.2,84.6,81.4,84.0,433900000.0,fifa_model:player_stats_2016.csv
+2015-16,Crystal Palace,76.423,71.6,77.4,75.4,76.818,102400000.0,fifa_model:player_stats_2016.csv
+2015-16,Derby County,72.235,72.4,71.8,71.4,72.636,43875000.0,fifa_model:player_stats_2016.csv
+2015-16,Everton,79.366,78.66666666666667,79.8,79.2,79.909,216300000.0,fifa_model:player_stats_2016.csv
+2015-16,Fulham,71.336,69.33333333333333,72.2,70.4,71.909,35225000.0,fifa_model:player_stats_2016.csv
+2015-16,Huddersfield Town,68.269,69.0,69.6,67.0,68.636,15475000.0,fifa_model:player_stats_2016.csv
+2015-16,Hull City,73.599,72.33333333333333,74.0,73.4,74.091,52350000.0,fifa_model:player_stats_2016.csv
+2015-16,Ipswich Town,70.134,70.0,68.6,69.8,70.727,26000000.0,fifa_model:player_stats_2016.csv
+2015-16,Leeds United,69.393,68.66666666666667,69.6,69.4,69.818,23850001.0,fifa_model:player_stats_2016.csv
+2015-16,Leicester City,76.396,76.0,77.0,75.2,77.273,114900000.0,fifa_model:player_stats_2016.csv
+2015-16,Liverpool,80.273,79.4,80.4,79.8,80.818,257300000.0,fifa_model:player_stats_2016.csv
+2015-16,MK Dons,67.612,69.5,66.8,67.2,68.0,13826001.0,fifa_model:player_stats_2016.csv
+2015-16,Manchester City,83.216,73.8,84.0,82.0,83.909,421000000.0,fifa_model:player_stats_2016.csv
+2015-16,Manchester United,81.917,73.0,82.2,80.2,82.545,356500000.0,fifa_model:player_stats_2016.csv
+2015-16,Middlesbrough,72.812,72.0,73.6,71.8,73.182,49800000.0,fifa_model:player_stats_2016.csv
+2015-16,Newcastle United,77.378,75.2,78.2,74.4,77.818,138500000.0,fifa_model:player_stats_2016.csv
+2015-16,Norwich City,74.985,73.66666666666667,75.6,74.2,75.364,75500000.0,fifa_model:player_stats_2016.csv
+2015-16,Nottingham Forest,71.048,70.8,70.4,71.0,71.455,29950000.0,fifa_model:player_stats_2016.csv
+2015-16,Preston North End,68.853,68.0,67.2,67.4,69.273,20950000.0,fifa_model:player_stats_2016.csv
+2015-16,Queens Park Rangers,72.258,67.5,72.2,72.6,72.818,38325000.0,fifa_model:player_stats_2016.csv
+2015-16,Reading,70.355,68.33333333333333,71.8,69.6,71.0,29350000.0,fifa_model:player_stats_2016.csv
+2015-16,Rotherham United,67.37,66.4,67.8,66.4,67.636,14825000.0,fifa_model:player_stats_2016.csv
+2015-16,Sheffield Wednesday,72.932,70.4,73.2,71.0,73.545,51175000.0,fifa_model:player_stats_2016.csv
+2015-16,Southampton,77.145,74.4,76.8,77.2,77.636,126800000.0,fifa_model:player_stats_2016.csv
+2015-16,Stoke City,77.816,75.25,79.0,77.0,78.273,140000000.0,fifa_model:player_stats_2016.csv
+2015-16,Sunderland,75.231,65.33333333333333,76.0,73.6,75.909,92650000.0,fifa_model:player_stats_2016.csv
+2015-16,Swansea City,77.183,71.2,77.8,76.8,77.818,111975000.0,fifa_model:player_stats_2016.csv
+2015-16,Tottenham Hotspur,80.108,60.5,79.6,79.8,80.818,270600000.0,fifa_model:player_stats_2016.csv
+2015-16,Watford,76.149,74.8,75.6,75.2,76.727,91700000.0,fifa_model:player_stats_2016.csv
+2015-16,West Bromwich Albion,76.254,75.2,75.8,75.8,76.727,86100000.0,fifa_model:player_stats_2016.csv
+2015-16,West Ham United,77.49,75.75,78.4,76.6,78.0,144100000.0,fifa_model:player_stats_2016.csv
+2015-16,Wolverhampton Wanderers,69.396,69.0,69.8,68.8,69.909,26100000.0,fifa_model:player_stats_2016.csv
+2016-17,Arsenal,83.887,80.2,84.0,82.2,84.545,503500000.0,fifa_model:player_stats_2017.csv
+2016-17,Aston Villa,73.921,72.0,74.0,74.2,74.273,63900000.0,fifa_model:player_stats_2017.csv
+2016-17,Barnsley,68.255,68.0,68.4,68.2,68.364,19000000.0,fifa_model:player_stats_2017.csv
+2016-17,Birmingham City,71.329,70.33333333333333,71.8,70.8,71.636,32376000.0,fifa_model:player_stats_2017.csv
+2016-17,Blackburn Rovers,68.749,68.4,68.2,69.0,69.091,20380000.0,fifa_model:player_stats_2017.csv
+2016-17,Bournemouth,75.13,73.0,76.4,73.4,75.636,99200000.0,fifa_model:player_stats_2017.csv
+2016-17,Brentford,71.289,72.0,70.4,71.4,71.818,39475000.0,fifa_model:player_stats_2017.csv
+2016-17,Brighton & Hove Albion,73.22,72.0,73.6,73.4,73.636,52750000.0,fifa_model:player_stats_2017.csv
+2016-17,Bristol City,70.865,68.5,70.0,71.6,71.364,32875000.0,fifa_model:player_stats_2017.csv
+2016-17,Burnley,75.149,74.33333333333333,74.6,75.2,75.727,88050000.0,fifa_model:player_stats_2017.csv
+2016-17,Burton Albion,67.639,59.5,68.4,68.6,68.364,16650000.0,fifa_model:player_stats_2017.csv
+2016-17,Cardiff City,71.015,70.25,70.4,70.8,71.364,29900000.0,fifa_model:player_stats_2017.csv
+2016-17,Chelsea,83.98,81.4,80.8,82.2,85.0,526700000.0,fifa_model:player_stats_2017.csv
+2016-17,Crystal Palace,78.542,76.25,78.2,77.4,79.182,177200000.0,fifa_model:player_stats_2017.csv
+2016-17,Derby County,72.187,71.8,72.0,71.4,72.545,43300000.0,fifa_model:player_stats_2017.csv
+2016-17,Everton,81.081,75.25,81.6,81.0,81.909,271100000.0,fifa_model:player_stats_2017.csv
+2016-17,Fulham,72.962,72.33333333333333,74.6,72.0,73.545,54850000.0,fifa_model:player_stats_2017.csv
+2016-17,Huddersfield Town,70.88,70.0,71.8,70.6,71.364,29225002.0,fifa_model:player_stats_2017.csv
+2016-17,Hull City,75.531,73.2,75.6,75.2,75.909,99200000.0,fifa_model:player_stats_2017.csv
+2016-17,Ipswich Town,71.018,68.75,71.2,70.8,71.455,34475000.0,fifa_model:player_stats_2017.csv
+2016-17,Leeds United,72.775,70.75,72.6,72.6,73.364,51500000.0,fifa_model:player_stats_2017.csv
+2016-17,Leicester City,79.059,78.2,78.8,76.4,79.727,213000000.0,fifa_model:player_stats_2017.csv
+2016-17,Liverpool,81.917,82.6,81.0,80.8,82.545,403000000.0,fifa_model:player_stats_2017.csv
+2016-17,Manchester City,83.965,82.8,85.2,82.0,84.636,512000000.0,fifa_model:player_stats_2017.csv
+2016-17,Manchester United,84.419,79.0,85.0,82.4,85.091,561500000.0,fifa_model:player_stats_2017.csv
+2016-17,Middlesbrough,75.505,74.4,74.6,74.4,76.0,105700000.0,fifa_model:player_stats_2017.csv
+2016-17,Newcastle United,75.03,72.0,75.2,75.0,75.364,91400000.0,fifa_model:player_stats_2017.csv
+2016-17,Norwich City,73.827,72.66666666666667,74.4,73.6,74.182,58600000.0,fifa_model:player_stats_2017.csv
+2016-17,Nottingham Forest,70.479,70.2,70.0,70.2,70.727,32700000.0,fifa_model:player_stats_2017.csv
+2016-17,Preston North End,70.363,68.2,71.0,69.6,70.818,30750000.0,fifa_model:player_stats_2017.csv
+2016-17,Queens Park Rangers,71.707,68.75,72.2,71.6,72.182,43350000.0,fifa_model:player_stats_2017.csv
+2016-17,Reading,71.565,70.4,70.6,72.4,72.0,38900000.0,fifa_model:player_stats_2017.csv
+2016-17,Rotherham United,66.675,68.0,66.8,66.2,67.364,13100000.0,fifa_model:player_stats_2017.csv
+2016-17,Sheffield Wednesday,72.842,73.2,72.2,71.0,73.182,51600000.0,fifa_model:player_stats_2017.csv
+2016-17,Southampton,78.771,78.25,77.6,79.4,79.273,205400000.0,fifa_model:player_stats_2017.csv
+2016-17,Stoke City,78.913,76.8,79.8,77.2,79.455,207700000.0,fifa_model:player_stats_2017.csv
+2016-17,Sunderland,76.674,77.5,77.2,75.0,77.091,125700000.0,fifa_model:player_stats_2017.csv
+2016-17,Swansea City,78.018,74.8,78.6,76.4,78.455,158500000.0,fifa_model:player_stats_2017.csv
+2016-17,Tottenham Hotspur,82.527,81.0,82.2,82.0,83.182,444500000.0,fifa_model:player_stats_2017.csv
+2016-17,Watford,77.636,69.0,78.6,76.8,77.909,162400000.0,fifa_model:player_stats_2017.csv
+2016-17,West Bromwich Albion,76.829,73.5,77.0,75.6,77.636,99901000.0,fifa_model:player_stats_2017.csv
+2016-17,West Ham United,78.94,75.2,78.8,78.8,79.364,205600000.0,fifa_model:player_stats_2017.csv
+2016-17,Wigan Athletic,69.621,71.0,68.8,69.6,69.909,24425000.0,fifa_model:player_stats_2017.csv
+2016-17,Wolverhampton Wanderers,71.546,70.2,72.4,71.0,71.909,43500000.0,fifa_model:player_stats_2017.csv
+2017-18,Arsenal,82.737,83.33333333333333,83.4,81.4,83.545,466000000.0,fifa_model:player_stats_2018.csv
+2017-18,Aston Villa,73.891,71.8,74.4,73.4,74.273,93700000.0,fifa_model:player_stats_2018.csv
+2017-18,Barnsley,68.213,68.25,68.0,68.2,68.455,25075000.0,fifa_model:player_stats_2018.csv
+2017-18,Birmingham City,70.305,69.66666666666667,71.0,70.4,71.0,41100000.0,fifa_model:player_stats_2018.csv
+2017-18,Bolton Wanderers,68.872,66.5,69.4,68.8,69.182,26900000.0,fifa_model:player_stats_2018.csv
+2017-18,Bournemouth,76.348,75.25,75.2,76.2,76.818,148500000.0,fifa_model:player_stats_2018.csv
+2017-18,Brentford,71.1,70.0,71.2,70.8,71.636,53600000.0,fifa_model:player_stats_2018.csv
+2017-18,Brighton & Hove Albion,75.943,73.2,76.8,74.8,76.455,143200000.0,fifa_model:player_stats_2018.csv
+2017-18,Bristol City,72.145,71.2,70.2,73.4,72.636,67800000.0,fifa_model:player_stats_2018.csv
+2017-18,Burnley,77.895,74.8,77.8,77.4,78.364,198900000.0,fifa_model:player_stats_2018.csv
+2017-18,Burton Albion,67.673,68.2,67.0,67.2,67.818,13875000.0,fifa_model:player_stats_2018.csv
+2017-18,Cardiff City,72.314,71.4,71.4,72.8,72.727,65775000.0,fifa_model:player_stats_2018.csv
+2017-18,Chelsea,84.044,84.8,79.0,83.2,84.727,677500000.0,fifa_model:player_stats_2018.csv
+2017-18,Crystal Palace,77.119,76.0,77.0,76.6,77.727,189700000.0,fifa_model:player_stats_2018.csv
+2017-18,Derby County,72.471,70.33333333333333,73.2,72.4,72.909,61100000.0,fifa_model:player_stats_2018.csv
+2017-18,Everton,79.602,75.33333333333333,80.4,79.6,80.182,252300000.0,fifa_model:player_stats_2018.csv
+2017-18,Fulham,73.052,73.4,73.2,71.4,73.545,94225000.0,fifa_model:player_stats_2018.csv
+2017-18,Huddersfield Town,74.475,73.33333333333333,74.2,74.6,75.0,110300000.0,fifa_model:player_stats_2018.csv
+2017-18,Hull City,71.531,70.0,71.4,71.0,71.909,53100000.0,fifa_model:player_stats_2018.csv
+2017-18,Ipswich Town,70.831,70.25,70.2,70.2,71.273,44850000.0,fifa_model:player_stats_2018.csv
+2017-18,Leeds United,71.85,68.75,72.2,72.2,72.364,65400000.0,fifa_model:player_stats_2018.csv
+2017-18,Leicester City,79.014,78.0,80.6,76.8,79.727,248200000.0,fifa_model:player_stats_2018.csv
+2017-18,Liverpool,82.055,80.4,81.2,81.2,82.636,479000000.0,fifa_model:player_stats_2018.csv
+2017-18,Manchester City,85.452,85.2,86.0,83.4,86.182,781000000.0,fifa_model:player_stats_2018.csv
+2017-18,Manchester United,84.295,87.0,84.4,81.6,85.0,666500000.0,fifa_model:player_stats_2018.csv
+2017-18,Middlesbrough,72.063,71.0,73.2,71.6,72.455,70625000.0,fifa_model:player_stats_2018.csv
+2017-18,Millwall,69.687,69.0,71.0,70.2,70.545,31800000.0,fifa_model:player_stats_2018.csv
+2017-18,Newcastle United,76.123,76.0,75.8,76.6,76.455,181700000.0,fifa_model:player_stats_2018.csv
+2017-18,Norwich City,71.741,69.5,72.6,71.0,72.273,57000000.0,fifa_model:player_stats_2018.csv
+2017-18,Nottingham Forest,71.513,69.0,72.0,70.2,71.818,57600000.0,fifa_model:player_stats_2018.csv
+2017-18,Preston North End,70.779,70.33333333333333,71.0,70.6,71.091,49675000.0,fifa_model:player_stats_2018.csv
+2017-18,Queens Park Rangers,70.303,68.6,70.0,69.4,70.818,40125000.0,fifa_model:player_stats_2018.csv
+2017-18,Reading,70.531,70.0,69.2,71.2,70.909,42550000.0,fifa_model:player_stats_2018.csv
+2017-18,Sheffield United,69.97,68.8,70.4,69.0,70.364,37825000.0,fifa_model:player_stats_2018.csv
+2017-18,Sheffield Wednesday,72.359,71.6,72.2,71.0,72.727,62800000.0,fifa_model:player_stats_2018.csv
+2017-18,Southampton,77.078,76.4,77.4,76.2,77.455,193800000.0,fifa_model:player_stats_2018.csv
+2017-18,Stoke City,77.378,76.25,76.6,76.6,77.818,203500000.0,fifa_model:player_stats_2018.csv
+2017-18,Sunderland,70.093,67.0,70.6,70.6,70.455,34350000.0,fifa_model:player_stats_2018.csv
+2017-18,Swansea City,76.19,76.4,75.0,74.8,76.636,153800000.0,fifa_model:player_stats_2018.csv
+2017-18,Tottenham Hotspur,84.029,82.33333333333333,84.2,83.0,84.727,640500000.0,fifa_model:player_stats_2018.csv
+2017-18,Watford,77.606,77.0,77.6,76.0,77.909,213500000.0,fifa_model:player_stats_2018.csv
+2017-18,West Bromwich Albion,77.205,76.0,76.8,76.6,77.636,160800000.0,fifa_model:player_stats_2018.csv
+2017-18,West Ham United,78.194,77.6,78.2,76.4,78.727,205900000.0,fifa_model:player_stats_2018.csv
+2017-18,Wolverhampton Wanderers,74.081,75.0,64.75,73.2,74.909,122300000.0,fifa_model:player_stats_2018.csv
+2018-19,Arsenal,82.527,76.6,82.4,81.4,83.182,483500000.0,fifa_model:player_stats_2019.csv
+2018-19,Aston Villa,73.224,72.4,73.0,71.6,73.727,80600000.0,fifa_model:player_stats_2019.csv
+2018-19,Birmingham City,70.88,72.5,71.0,70.8,71.364,48350000.0,fifa_model:player_stats_2019.csv
+2018-19,Blackburn Rovers,68.91,67.25,69.4,69.2,69.818,33450000.0,fifa_model:player_stats_2019.csv
+2018-19,Bolton Wanderers,68.715,67.0,69.0,69.0,69.0,22275000.0,fifa_model:player_stats_2019.csv
+2018-19,Bournemouth,77.584,72.8,77.2,77.4,78.091,204500000.0,fifa_model:player_stats_2019.csv
+2018-19,Brentford,70.891,73.0,69.4,69.8,71.273,53500000.0,fifa_model:player_stats_2019.csv
+2018-19,Brighton & Hove Albion,77.033,76.2,76.8,76.6,77.455,170750000.0,fifa_model:player_stats_2019.csv
+2018-19,Bristol City,71.078,69.0,71.0,71.4,71.455,53575000.0,fifa_model:player_stats_2019.csv
+2018-19,Burnley,77.471,77.0,77.0,76.4,77.909,184800000.0,fifa_model:player_stats_2019.csv
+2018-19,Cardiff City,73.906,72.0,74.2,73.8,74.273,102500000.0,fifa_model:player_stats_2019.csv
+2018-19,Chelsea,83.467,85.2,80.0,82.6,84.182,639000000.0,fifa_model:player_stats_2019.csv
+2018-19,Crystal Palace,78.085,76.6,77.6,77.2,78.636,218800000.0,fifa_model:player_stats_2019.csv
+2018-19,Derby County,72.015,71.6,71.4,71.8,72.364,64900000.0,fifa_model:player_stats_2019.csv
+2018-19,Everton,79.835,78.0,80.6,79.2,80.364,293500000.0,fifa_model:player_stats_2019.csv
+2018-19,Fulham,76.426,73.5,77.6,74.0,76.909,173000000.0,fifa_model:player_stats_2019.csv
+2018-19,Huddersfield Town,74.861,72.25,74.6,75.6,75.273,131600000.0,fifa_model:player_stats_2019.csv
+2018-19,Hull City,70.299,68.33333333333333,72.0,68.8,70.727,45525000.0,fifa_model:player_stats_2019.csv
+2018-19,Ipswich Town,68.43,67.2,67.8,68.8,68.636,23875000.0,fifa_model:player_stats_2019.csv
+2018-19,Leeds United,73.235,73.0,73.4,73.8,74.364,82650001.0,fifa_model:player_stats_2019.csv
+2018-19,Leicester City,78.827,76.66666666666667,78.0,79.2,79.545,253900000.0,fifa_model:player_stats_2019.csv
+2018-19,Liverpool,84.329,84.2,82.8,82.8,85.091,690000000.0,fifa_model:player_stats_2019.csv
+2018-19,Manchester City,86.265,86.0,87.6,84.2,87.0,889000000.0,fifa_model:player_stats_2019.csv
+2018-19,Manchester United,83.4,83.6,82.0,80.2,84.0,608000000.0,fifa_model:player_stats_2019.csv
+2018-19,Middlesbrough,72.511,69.2,73.2,72.6,73.0,60600001.0,fifa_model:player_stats_2019.csv
+2018-19,Millwall,69.887,68.25,70.0,70.0,70.182,33300000.0,fifa_model:player_stats_2019.csv
+2018-19,Newcastle United,77.172,75.66666666666667,77.4,77.0,77.545,208500000.0,fifa_model:player_stats_2019.csv
+2018-19,Norwich City,72.906,70.0,73.2,71.8,73.273,84300000.0,fifa_model:player_stats_2019.csv
+2018-19,Nottingham Forest,72.651,73.0,72.4,71.8,72.909,80500000.0,fifa_model:player_stats_2019.csv
+2018-19,Preston North End,71.003,68.25,72.6,70.2,71.455,54600000.0,fifa_model:player_stats_2019.csv
+2018-19,Queens Park Rangers,70.326,69.0,71.4,69.8,70.727,33650000.0,fifa_model:player_stats_2019.csv
+2018-19,Reading,70.741,69.5,69.6,70.8,71.273,45925000.0,fifa_model:player_stats_2019.csv
+2018-19,Rotherham United,68.218,66.5,68.6,68.0,68.455,22600000.0,fifa_model:player_stats_2019.csv
+2018-19,Sheffield United,72.228,70.2,72.0,71.8,72.818,70600000.0,fifa_model:player_stats_2019.csv
+2018-19,Sheffield Wednesday,71.501,71.0,71.8,69.0,71.909,52150000.0,fifa_model:player_stats_2019.csv
+2018-19,Southampton,76.629,73.5,77.4,76.2,77.091,173100000.0,fifa_model:player_stats_2019.csv
+2018-19,Stoke City,72.816,72.0,72.0,71.8,73.273,78025000.0,fifa_model:player_stats_2019.csv
+2018-19,Swansea City,71.906,70.0,71.8,71.2,72.273,64700000.0,fifa_model:player_stats_2019.csv
+2018-19,Tottenham Hotspur,84.553,82.2,82.6,83.8,85.455,696000000.0,fifa_model:player_stats_2019.csv
+2018-19,Watford,77.988,76.0,78.6,77.0,78.455,199400000.0,fifa_model:player_stats_2019.csv
+2018-19,West Bromwich Albion,74.179,70.2,73.2,74.6,74.727,95400000.0,fifa_model:player_stats_2019.csv
+2018-19,West Ham United,79.048,77.25,80.4,77.2,79.455,266000000.0,fifa_model:player_stats_2019.csv
+2018-19,Wigan Athletic,69.775,69.0,70.2,69.8,70.0,36200000.0,fifa_model:player_stats_2019.csv
+2018-19,Wolverhampton Wanderers,77.926,75.8,77.6,76.4,78.909,210600000.0,fifa_model:player_stats_2019.csv
+2019-20,Arsenal,81.486,77.8,81.4,79.4,82.273,374000000.0,fifa_model:player_stats_2020.csv
+2019-20,Aston Villa,76.55,76.0,76.2,74.4,77.0,160100000.0,fifa_model:player_stats_2020.csv
+2019-20,Barnsley,68.224,68.0,68.6,67.2,68.455,21100000.0,fifa_model:player_stats_2020.csv
+2019-20,Birmingham City,71.097,71.0,71.8,71.2,71.545,44650000.0,fifa_model:player_stats_2020.csv
+2019-20,Blackburn Rovers,70.665,69.0,71.8,70.6,71.636,41925002.0,fifa_model:player_stats_2020.csv
+2019-20,Bournemouth,76.988,73.5,77.0,76.6,77.455,179200000.0,fifa_model:player_stats_2020.csv
+2019-20,Brentford,72.79,73.2,71.0,72.4,73.364,79700000.0,fifa_model:player_stats_2020.csv
+2019-20,Brighton & Hove Albion,76.925,73.0,77.2,76.4,77.364,156600000.0,fifa_model:player_stats_2020.csv
+2019-20,Bristol City,71.842,71.75,71.4,72.0,72.182,60825000.0,fifa_model:player_stats_2020.csv
+2019-20,Burnley,77.067,77.33333333333333,76.6,76.4,77.545,145500000.0,fifa_model:player_stats_2020.csv
+2019-20,Cardiff City,72.217,70.33333333333333,72.0,72.8,72.545,53075000.0,fifa_model:player_stats_2020.csv
+2019-20,Charlton Athletic,69.561,68.0,70.2,68.8,69.909,25525000.0,fifa_model:player_stats_2020.csv
+2019-20,Chelsea,81.441,80.2,81.0,81.6,81.909,428500000.0,fifa_model:player_stats_2020.csv
+2019-20,Crystal Palace,77.516,75.33333333333333,78.4,76.8,77.909,147600001.0,fifa_model:player_stats_2020.csv
+2019-20,Derby County,71.659,69.66666666666667,73.2,71.2,72.091,49675000.0,fifa_model:player_stats_2020.csv
+2019-20,Everton,79.254,76.75,78.8,79.4,79.727,258100000.0,fifa_model:player_stats_2020.csv
+2019-20,Fulham,73.565,74.0,72.8,72.2,74.0,87000000.0,fifa_model:player_stats_2020.csv
+2019-20,Huddersfield Town,71.082,70.25,71.0,70.2,71.545,47025000.0,fifa_model:player_stats_2020.csv
+2019-20,Hull City,69.153,67.66666666666667,69.6,69.4,69.455,28025000.0,fifa_model:player_stats_2020.csv
+2019-20,Leeds United,73.749,73.5,74.6,73.4,74.273,86000000.0,fifa_model:player_stats_2020.csv
+2019-20,Leicester City,80.602,78.0,80.0,79.8,81.545,309100000.0,fifa_model:player_stats_2020.csv
+2019-20,Liverpool,86.197,85.4,83.8,85.4,87.182,772000000.0,fifa_model:player_stats_2020.csv
+2019-20,Luton Town,68.576,68.5,68.6,68.2,68.909,23000000.0,fifa_model:player_stats_2020.csv
+2019-20,Manchester City,86.411,87.4,84.8,83.6,87.273,723600000.0,fifa_model:player_stats_2020.csv
+2019-20,Manchester United,82.449,78.33333333333333,83.4,81.2,83.091,462000000.0,fifa_model:player_stats_2020.csv
+2019-20,Middlesbrough,70.891,70.0,71.0,71.0,71.273,45800001.0,fifa_model:player_stats_2020.csv
+2019-20,Millwall,70.359,68.75,70.4,70.4,70.727,35775000.0,fifa_model:player_stats_2020.csv
+2019-20,Newcastle United,78.063,75.0,77.6,78.2,78.455,208000000.0,fifa_model:player_stats_2020.csv
+2019-20,Norwich City,74.262,75.0,75.0,72.8,74.545,104325000.0,fifa_model:player_stats_2020.csv
+2019-20,Nottingham Forest,73.22,70.75,73.4,72.8,73.636,79300000.0,fifa_model:player_stats_2020.csv
+2019-20,Preston North End,71.805,67.0,73.2,71.6,72.364,55325000.0,fifa_model:player_stats_2020.csv
+2019-20,Queens Park Rangers,70.06,71.0,71.0,69.6,70.364,34985000.0,fifa_model:player_stats_2020.csv
+2019-20,Reading,71.46,68.8,71.4,71.6,72.0,51075000.0,fifa_model:player_stats_2020.csv
+2019-20,Sheffield United,75.805,72.6,76.2,75.8,76.364,143200000.0,fifa_model:player_stats_2020.csv
+2019-20,Sheffield Wednesday,71.28,71.2,70.6,70.0,71.636,43425000.0,fifa_model:player_stats_2020.csv
+2019-20,Southampton,76.636,73.0,77.2,76.4,77.273,165400000.0,fifa_model:player_stats_2020.csv
+2019-20,Stoke City,71.486,69.8,71.0,71.4,71.909,46125000.0,fifa_model:player_stats_2020.csv
+2019-20,Swansea City,71.368,67.0,72.8,70.8,71.909,52550000.0,fifa_model:player_stats_2020.csv
+2019-20,Tottenham Hotspur,83.269,85.5,82.8,82.2,84.091,502500000.0,fifa_model:player_stats_2020.csv
+2019-20,Watford,77.767,74.8,79.2,76.0,78.182,181900000.0,fifa_model:player_stats_2020.csv
+2019-20,West Bromwich Albion,73.752,71.2,74.6,72.8,74.182,93100000.0,fifa_model:player_stats_2020.csv
+2019-20,West Ham United,78.91,77.5,79.8,76.6,79.364,236000000.0,fifa_model:player_stats_2020.csv
+2019-20,Wigan Athletic,70.045,69.5,69.8,70.6,70.364,31975000.0,fifa_model:player_stats_2020.csv
+2019-20,Wolverhampton Wanderers,79.403,78.0,75.75,79.2,80.545,235250000.0,fifa_model:player_stats_2020.csv
+2021-22,Arsenal,80.295,76.25,81.0,77.6,81.0,449500000.0,sofifa:players_22.csv
+2021-22,Aston Villa,78.647,69.2,78.6,77.8,79.182,312700000.0,sofifa:players_22.csv
+2021-22,Barnsley,69.134,69.2,61.6,70.6,69.727,39700000.0,sofifa:players_22.csv
+2021-22,Birmingham City,71.097,66.2,71.0,71.0,71.545,39400000.0,sofifa:players_22.csv
+2021-22,Blackburn Rovers,70.351,66.2,70.6,70.2,70.909,52700000.0,sofifa:players_22.csv
+2021-22,Blackpool,66.932,65.0,66.6,67.0,67.182,24775000.0,sofifa:players_22.csv
+2021-22,Bournemouth,73.434,71.6,74.6,72.8,74.091,80400000.0,sofifa:players_22.csv
+2021-22,Brentford,74.033,72.2,74.0,74.0,74.455,108600000.0,sofifa:players_22.csv
+2021-22,Brighton & Hove Albion,76.366,70.0,77.6,76.0,76.909,201800000.0,sofifa:players_22.csv
+2021-22,Bristol City,69.782,65.0,69.2,69.8,70.182,38450000.0,sofifa:players_22.csv
+2021-22,Burnley,77.318,72.6,76.4,77.4,77.818,176300000.0,sofifa:players_22.csv
+2021-22,Cardiff City,70.508,65.2,70.0,70.8,71.455,33350000.0,sofifa:players_22.csv
+2021-22,Chelsea,84.179,83.0,85.0,82.8,84.727,896000000.0,sofifa:players_22.csv
+2021-22,Coventry City,69.408,67.8,70.0,69.2,69.818,41125000.0,sofifa:players_22.csv
+2021-22,Crystal Palace,76.576,76.4,75.8,75.8,76.909,171500000.0,sofifa:players_22.csv
+2021-22,Derby County,69.846,63.5,71.0,69.4,70.273,33750000.0,sofifa:players_22.csv
+2021-22,Everton,80.258,79.2,79.0,79.6,80.818,401000000.0,sofifa:players_22.csv
+2021-22,Fulham,74.265,69.25,74.4,73.4,74.636,96500000.0,sofifa:players_22.csv
+2021-22,Huddersfield Town,69.093,68.4,68.0,69.8,69.455,34450000.0,sofifa:players_22.csv
+2021-22,Hull City,67.827,62.2,68.6,67.2,68.182,31550000.0,sofifa:players_22.csv
+2021-22,Leeds United,77.317,69.66666666666667,79.4,76.6,78.182,264400000.0,sofifa:players_22.csv
+2021-22,Leicester City,81.512,76.4,82.0,80.2,82.182,512000000.0,sofifa:players_22.csv
+2021-22,Liverpool,85.609,84.2,83.0,85.6,86.727,1016500000.0,sofifa:players_22.csv
+2021-22,Luton Town,68.854,68.0,68.8,69.0,69.091,31475000.0,sofifa:players_22.csv
+2021-22,Manchester City,86.138,84.6,86.4,85.4,86.818,1279000000.0,sofifa:players_22.csv
+2021-22,Manchester United,85.078,85.66666666666667,85.6,83.8,85.818,945500000.0,sofifa:players_22.csv
+2021-22,Middlesbrough,71.157,63.6,71.0,71.4,71.545,48575000.0,sofifa:players_22.csv
+2021-22,Millwall,70.565,69.6,69.4,71.0,71.0,35900000.0,sofifa:players_22.csv
+2021-22,Newcastle United,76.531,73.25,76.4,75.4,76.909,169600000.0,sofifa:players_22.csv
+2021-22,Norwich City,75.19,69.6,74.8,75.0,75.636,137600000.0,sofifa:players_22.csv
+2021-22,Nottingham Forest,71.393,71.33333333333333,70.0,71.6,71.818,59000000.0,sofifa:players_22.csv
+2021-22,Peterborough United,67.482,66.75,66.6,67.8,68.182,24425000.0,sofifa:players_22.csv
+2021-22,Preston North End,70.565,65.0,72.0,69.4,71.0,42600000.0,sofifa:players_22.csv
+2021-22,Queens Park Rangers,70.692,68.2,69.4,70.4,71.182,41700000.0,sofifa:players_22.csv
+2021-22,Reading,72.194,64.6,72.8,72.4,72.727,53300000.0,sofifa:players_22.csv
+2021-22,Sheffield United,74.22,71.0,74.0,74.6,74.636,85800000.0,sofifa:players_22.csv
+2021-22,Southampton,76.441,73.5,77.6,76.0,76.909,190800000.0,sofifa:players_22.csv
+2021-22,Stoke City,70.955,65.4,72.2,70.6,71.364,49400000.0,sofifa:players_22.csv
+2021-22,Swansea City,70.576,64.5,71.2,71.8,71.273,45800000.0,sofifa:players_22.csv
+2021-22,Tottenham Hotspur,82.718,76.5,83.2,80.0,83.455,695000000.0,sofifa:players_22.csv
+2021-22,Watford,75.659,75.0,76.0,74.4,76.091,130200000.0,sofifa:players_22.csv
+2021-22,West Bromwich Albion,72.722,73.0,65.6,72.2,73.182,64400000.0,sofifa:players_22.csv
+2021-22,West Ham United,80.022,79.0,80.2,79.4,80.545,354900000.0,sofifa:players_22.csv
+2021-22,Wolverhampton Wanderers,78.845,78.6,72.6,79.2,79.636,314000000.0,sofifa:players_22.csv
+2025-26,Arsenal,85.104,84.2,84.6,84.6,85.727,1081500000.0,sofifa:players.csv
+2025-26,Aston Villa,81.411,84.0,82.2,80.0,81.909,492000000.0,sofifa:players.csv
+2025-26,Birmingham City,73.048,72.0,72.6,73.2,73.455,72000000.0,sofifa:players.csv
+2025-26,Blackburn Rovers,69.606,66.0,70.6,69.2,69.909,34900000.0,sofifa:players.csv
+2025-26,Bournemouth,78.231,77.25,79.2,76.2,78.909,286300000.0,sofifa:players.csv
+2025-26,Brentford,77.269,75.0,78.2,77.0,77.727,222200000.0,sofifa:players.csv
+2025-26,Brighton & Hove Albion,78.539,74.0,79.0,79.2,79.091,316000000.0,sofifa:players.csv
+2025-26,Bristol City,71.449,68.5,72.0,71.4,71.727,50700000.0,sofifa:players.csv
+2025-26,Burnley,75.876,72.4,76.0,76.2,76.273,147600000.0,sofifa:players.csv
+2025-26,Charlton Athletic,68.707,66.75,66.6,69.6,69.182,28275000.0,sofifa:players.csv
+2025-26,Chelsea,81.318,76.5,83.6,80.6,81.818,719000000.0,sofifa:players.csv
+2025-26,Coventry City,71.94,70.66666666666667,72.2,72.0,72.364,60100000.0,sofifa:players.csv
+2025-26,Crystal Palace,79.074,75.5,78.4,79.4,79.727,342400000.0,sofifa:players.csv
+2025-26,Derby County,70.865,68.4,71.4,70.4,71.364,41475000.0,sofifa:players.csv
+2025-26,Everton,78.153,77.66666666666667,77.8,77.2,78.818,251000000.0,sofifa:players.csv
+2025-26,Fulham,78.269,70.66666666666667,78.8,78.2,78.727,232800000.0,sofifa:players.csv
+2025-26,Hull City,71.655,68.2,72.4,70.8,72.0,51300000.0,sofifa:players.csv
+2025-26,Ipswich Town,74.314,72.33333333333333,74.8,74.4,74.727,95699999.0,sofifa:players.csv
+2025-26,Leeds United,76.561,75.25,76.0,76.4,76.909,187800000.0,sofifa:players.csv
+2025-26,Leicester City,73.812,72.5,74.8,73.8,74.182,84600000.0,sofifa:players.csv
+2025-26,Liverpool,86.081,85.5,87.2,84.6,86.909,1093000000.0,sofifa:players.csv
+2025-26,Manchester City,85.033,84.4,84.4,83.2,85.818,1049500000.0,sofifa:players.csv
+2025-26,Manchester United,80.883,76.75,81.6,80.4,81.455,549500000.0,sofifa:players.csv
+2025-26,Middlesbrough,71.561,69.33333333333333,72.6,71.4,71.909,53500000.0,sofifa:players.csv
+2025-26,Millwall,70.85,63.0,71.8,71.4,71.364,44500000.0,sofifa:players.csv
+2025-26,Newcastle United,81.85,81.4,81.6,80.8,82.364,570500000.0,sofifa:players.csv
+2025-26,Norwich City,71.614,70.6,70.6,71.4,72.091,63700000.0,sofifa:players.csv
+2025-26,Nottingham Forest,80.303,78.0,80.0,80.2,80.818,417500000.0,sofifa:players.csv
+2025-26,Oxford United,69.434,65.8,69.8,69.6,69.727,35500000.0,sofifa:players.csv
+2025-26,Portsmouth,70.13,65.25,71.6,68.8,70.636,39900000.0,sofifa:players.csv
+2025-26,Preston North End,70.123,68.5,70.6,70.0,70.455,39125000.0,sofifa:players.csv
+2025-26,Queens Park Rangers,71.194,65.0,71.8,70.6,71.727,48500000.0,sofifa:players.csv
+2025-26,Sheffield United,73.052,67.2,73.2,72.8,73.545,77600000.0,sofifa:players.csv
+2025-26,Sheffield Wednesday,68.452,63.8,66.0,69.4,69.545,26050000.0,sofifa:players.csv
+2025-26,Southampton,73.026,71.6,73.4,73.0,73.273,87500000.0,sofifa:players.csv
+2025-26,Stoke City,70.812,67.5,71.2,70.0,71.182,44700000.0,sofifa:players.csv
+2025-26,Sunderland,77.104,70.6,77.6,77.8,77.727,220599998.0,sofifa:players.csv
+2025-26,Swansea City,71.175,68.75,71.6,70.2,71.636,54000000.0,sofifa:players.csv
+2025-26,Tottenham Hotspur,81.629,79.6,82.8,81.0,82.091,595000000.0,sofifa:players.csv
+2025-26,Watford,70.835,64.0,72.6,70.4,71.364,49600000.0,sofifa:players.csv
+2025-26,West Bromwich Albion,71.295,70.0,72.0,71.2,71.636,54300000.0,sofifa:players.csv
+2025-26,West Ham United,78.112,74.33333333333333,79.0,77.4,78.545,248900000.0,sofifa:players.csv
+2025-26,Wolverhampton Wanderers,77.082,76.6,74.2,76.4,77.545,218500000.0,sofifa:players.csv
+2025-26,Wrexham,71.584,65.4,72.0,72.0,72.091,49375000.0,sofifa:players.csv
