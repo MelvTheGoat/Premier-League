@@ -151,3 +151,53 @@ def test_scorelines_are_never_marked_correct(predicted_db):
         data = queries.gameweek(conn, SEASON, 1)
     for match in data["matches"]:
         assert "scoreline_correct" not in match
+
+
+def test_backfill_still_repredicts_the_upcoming_gameweek(predicted_db, monkeypatch):
+    """A weekly `--backfill` run must not go quiet once history is filled.
+
+    Completed gameweeks are skipped when they already have a prediction,
+    but the gameweek about to be played is re-predicted every run - that
+    is the entire point of running it after each round of fixtures.
+    """
+    import plpredict.pipeline.run as pipeline
+
+    monkeypatch.setattr(pipeline.ingest, "run", lambda **kwargs: _NoopReport())
+    monkeypatch.setattr(pipeline, "build_features", lambda db_path=None: _features(predicted_db))
+    monkeypatch.setattr(pipeline, "store_features", lambda frame, db_path=None: 0)
+    monkeypatch.setattr(
+        pipeline,
+        "train_and_predict",
+        _recording_train_and_predict(calls := []),
+    )
+
+    pipeline.run(season=SEASON, refresh_source=False, backfill=True, db_path=predicted_db, verbose=False)
+
+    with db.connect(predicted_db) as conn:
+        upcoming = next_unplayed_gameweek(conn, SEASON)
+    assert calls == [upcoming], "only the upcoming gameweek should be re-predicted"
+
+
+class _NoopReport:
+    def summary(self) -> str:
+        return "no ingest"
+
+
+def _features(path):
+    with db.connect(path) as conn:
+        return FeatureBuilder(conn).build()
+
+
+def _recording_train_and_predict(calls):
+    def recorder(conn, features, matches, season, matchday, **kwargs):
+        calls.append(matchday)
+        from plpredict.pipeline.run import GameweekResult
+        import datetime as dt
+
+        return GameweekResult(
+            run_id="test", season=season, matchday=matchday,
+            cutoff=dt.date(2026, 1, 1), n_training_matches=0,
+            n_predictions=0, dropped_columns=0,
+        )
+
+    return recorder

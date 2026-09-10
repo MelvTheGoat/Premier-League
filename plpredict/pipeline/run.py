@@ -25,6 +25,7 @@ from typing import Any
 import pandas as pd
 
 from plpredict import config, db
+from plpredict.data import ingest
 from plpredict.features.build import (
     FEATURE_VERSION,
     build_features,
@@ -251,8 +252,6 @@ def run(
     which is how the history page gets populated on a first run without
     ever showing a prediction made with hindsight.
     """
-    from plpredict.data import ingest
-
     report = ingest.run(refresh_source=refresh_source, db_path=db_path)
     if verbose:
         print(f"Ingest: {report.summary()}")
@@ -267,27 +266,33 @@ def run(
 
     with db.connect(db_path) as conn:
         matches = load_match_frame(conn)
+
+        # Each target is tagged with whether it is history being filled
+        # in or the gameweek about to be played. Only the former is
+        # skipped when a prediction already exists: the upcoming
+        # gameweek is always re-predicted, because the whole point of a
+        # weekly run is that it now has last weekend's results.
+        targets: list[tuple[int, bool]] = []
         if matchday is not None:
-            targets = [matchday]
+            targets.append((matchday, False))
         else:
-            targets = []
             if backfill:
                 completed = last_completed_gameweek(conn, season) or 0
-                targets.extend(range(1, completed + 1))
+                targets.extend((gameweek, True) for gameweek in range(1, completed + 1))
             upcoming = next_unplayed_gameweek(conn, season)
             if upcoming is not None:
-                targets.append(upcoming)
+                targets.append((upcoming, False))
 
         already_predicted = {
-            (row[0], row[1])
+            row[1]
             for row in conn.execute(
                 "SELECT season, matchday FROM current_predictions WHERE season = ?",
                 (season,),
             )
         }
 
-        for target in targets:
-            if backfill and (season, target) in already_predicted:
+        for target, is_history in targets:
+            if is_history and target in already_predicted:
                 continue
             result = train_and_predict(conn, features, matches, season, target)
             results.append(result)
