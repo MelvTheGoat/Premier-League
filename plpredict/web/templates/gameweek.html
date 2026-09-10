@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% from "_match.html" import match_row %}
+{% block title %}Gameweek {{ data.matchday }} &middot; {{ season }} &middot; PL Predictor{% endblock %}
+
+{% block content %}
+<section class="gw-head">
+  <div class="gw-title">
+    <h1>Gameweek {{ data.matchday }}</h1>
+    <p class="muted">
+      {{ season }}
+      {% if data.dates %}
+        &middot; {{ data.dates[0] | pretty_date }}{% if data.dates|length > 1 %} &ndash; {{ data.dates[-1] | pretty_date }}{% endif %}
+      {% endif %}
+      &middot;
+      {% if data.is_complete %}<span class="tag done">Completed</span>
+      {% elif data.any_played %}<span class="tag live">In progress</span>
+      {% else %}<span class="tag upcoming">Upcoming</span>{% endif %}
+    </p>
+  </div>
+
+  {% if data.n_scored %}
+    <div class="gw-scoreboard">
+      <div class="stat">
+        <span class="stat-value">{{ data.n_correct }}/{{ data.n_scored }}</span>
+        <span class="stat-label">outcomes correct</span>
+      </div>
+      <div class="stat">
+        <span class="stat-value">{{ data.accuracy | percent(0) }}</span>
+        <span class="stat-label">accuracy</span>
+      </div>
+      <div class="stat">
+        <span class="stat-value">{{ data.n_exact_scores }}</span>
+        <span class="stat-label">exact scorelines</span>
+      </div>
+    </div>
+  {% endif %}
+</section>
+
+<nav class="gw-nav" aria-label="Gameweeks">
+  {% for week in weeks %}
+    <a class="chip{% if week.matchday == data.matchday %} chip-active{% endif %}{% if week.is_complete %} chip-done{% endif %}"
+       href="{{ url_for('gameweek', season=season, matchday=week.matchday) }}"
+       title="Gameweek {{ week.matchday }}{% if week.n_scored %} - {{ week.n_correct }}/{{ week.n_scored }} correct{% endif %}">
+      {{ week.matchday }}
+    </a>
+  {% endfor %}
+</nav>
+
+{% if not data.any_played %}
+  <p class="notice">
+    These are the predictions published before this gameweek kicked off. The model
+    that made them was trained only on matches played before the first fixture below.
+  </p>
+{% endif %}
+
+<div class="match-list">
+  <div class="match-list-head">
+    <span>Kick-off</span><span>Match</span><span>Outcome prediction</span><span>Scoreline</span>
+  </div>
+  {% for match in data.matches %}
+    {{ match_row(match) }}
+  {% endfor %}
+</div>
+
+<p class="footnote">
+  Outcome predictions are marked correct (✓) or incorrect (✗) once a match is played.
+  Scorelines are shown side by side and deliberately not marked: predicting an exact
+  score is a far harder problem than predicting the result, and treating it as
+  pass/fail would say more about that difficulty than about the model.
+</p>
+{% endblock %}

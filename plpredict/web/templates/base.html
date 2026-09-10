@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Premier League Predictor{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="{{ url_for('index') }}">
+        <span class="brand-mark">PL</span>
+        <span>Predictor</span>
+      </a>
+      <nav class="site-nav">
+        <a href="{{ url_for('gameweek', season=season, matchday=current) }}">Current gameweek</a>
+        <a href="{{ url_for('season_overview', season=season) }}">Season</a>
+        <a href="{{ url_for('model_card') }}">Model</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site-footer wrap">
+    <p>
+      Season {{ season }}.
+      {% if record and record.scored %}
+        Outcome predictions correct this season:
+        <strong>{{ record.correct }}/{{ record.scored }}</strong>
+        ({{ record.accuracy | percent(1) }}).
+        Exact scorelines: {{ record.exact }}/{{ record.scored }}
+        ({{ record.exact_rate | percent(1) }}).
+      {% else %}
+        No completed gameweeks scored yet.
+      {% endif %}
+    </p>
+    {% if freshness %}
+      <p class="muted">
+        Results loaded up to {{ freshness.latest_result_date | pretty_date }}.
+        Last pipeline run {{ freshness.ingested_at }}.
+      </p>
+    {% endif %}
+  </footer>
+</body>
+</html>

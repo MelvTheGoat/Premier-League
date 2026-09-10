@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}{{ season }} season &middot; PL Predictor{% endblock %}
+
+{% block content %}
+<section class="gw-head">
+  <div class="gw-title">
+    <h1>{{ season }} season</h1>
+    <p class="muted">Every gameweek, and how the predictions published before it turned out.</p>
+  </div>
+  {% if record.scored %}
+    <div class="gw-scoreboard">
+      <div class="stat">
+        <span class="stat-value">{{ record.correct }}/{{ record.scored }}</span>
+        <span class="stat-label">outcomes correct</span>
+      </div>
+      <div class="stat">
+        <span class="stat-value">{{ record.accuracy | percent(1) }}</span>
+        <span class="stat-label">accuracy</span>
+      </div>
+      <div class="stat">
+        <span class="stat-value">{{ record.exact_rate | percent(1) }}</span>
+        <span class="stat-label">exact scorelines</span>
+      </div>
+    </div>
+  {% endif %}
+</section>
+
+{% if seasons | length > 1 %}
+  <nav class="gw-nav" aria-label="Seasons">
+    {% for option in seasons %}
+      <a class="chip{% if option == season %} chip-active{% endif %}"
+         href="{{ url_for('season_overview', season=option) }}">{{ option }}</a>
+    {% endfor %}
+  </nav>
+{% endif %}
+
+<table class="season-table">
+  <thead>
+    <tr>
+      <th>GW</th><th>Dates</th><th>Status</th>
+      <th class="num">Correct</th><th class="num">Accuracy</th><th></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for week in weeks %}
+      <tr class="{% if week.matchday == current %}row-current{% endif %}">
+        <td class="gw-cell">{{ week.matchday }}</td>
+        <td>{{ week.first_date | pretty_date }}{% if week.last_date != week.first_date %} &ndash; {{ week.last_date | pretty_date }}{% endif %}</td>
+        <td>
+          {% if week.is_complete %}<span class="tag done">Completed</span>
+          {% elif week.played %}<span class="tag live">In progress</span>
+          {% else %}<span class="tag upcoming">Upcoming</span>{% endif %}
+        </td>
+        <td class="num">{% if week.n_scored %}{{ week.n_correct }}/{{ week.n_scored }}{% else %}&mdash;{% endif %}</td>
+        <td class="num">{% if week.accuracy is not none %}{{ week.accuracy | percent(0) }}{% else %}&mdash;{% endif %}</td>
+        <td class="num"><a class="link" href="{{ url_for('gameweek', season=season, matchday=week.matchday) }}">View</a></td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,65 @@
+{% macro probability_bar(probabilities, predicted) %}
+  <div class="probbar" role="img"
+       aria-label="Home {{ probabilities.H | percent }}, draw {{ probabilities.D | percent }}, away {{ probabilities.A | percent }}">
+    {% for key, label in [('H', 'H'), ('D', 'D'), ('A', 'A')] %}
+      <span class="seg seg-{{ key|lower }}{% if predicted == key %} seg-picked{% endif %}"
+            style="width: {{ (probabilities[key] * 100) | round(1) }}%">
+        {% if probabilities[key] > 0.14 %}{{ probabilities[key] | percent }}{% endif %}
+      </span>
+    {% endfor %}
+  </div>
+{% endmacro %}
+
+{% macro match_row(match) %}
+<article class="match{% if match.played %} is-played{% endif %}">
+  <div class="match-when">
+    <span class="date">{{ match.date | pretty_date }}</span>
+    <span class="time">{{ match.kickoff or '' }}</span>
+  </div>
+
+  <div class="match-teams">
+    <span class="team home">{{ match.home_short }}</span>
+    <span class="score">
+      {% if match.played %}
+        {{ match.home_goals }}&ndash;{{ match.away_goals }}
+      {% else %}
+        <span class="vs">v</span>
+      {% endif %}
+    </span>
+    <span class="team away">{{ match.away_short }}</span>
+  </div>
+
+  {% if match.has_prediction %}
+    <div class="match-prediction">
+      <div class="pred-line">
+        <span class="pick pick-{{ match.predicted_outcome | lower }}">{{ match.predicted_label }}</span>
+        <span class="conf">{{ match.confidence | percent }} confidence</span>
+        {% if match.outcome_correct is not none %}
+          <span class="verdict {{ 'ok' if match.outcome_correct else 'bad' }}"
+                title="{{ 'Outcome predicted correctly' if match.outcome_correct else 'Outcome predicted incorrectly' }}">
+            {{ '✓' if match.outcome_correct else '✗' }}
+          </span>
+        {% endif %}
+      </div>
+      {{ probability_bar(match.probabilities, match.predicted_outcome) }}
+    </div>
+
+    <div class="match-score">
+      <div class="score-pair">
+        <span class="label">Predicted score</span>
+        <span class="value">{{ match.pred_home_goals }}&ndash;{{ match.pred_away_goals }}</span>
+      </div>
+      <div class="score-pair">
+        <span class="label">Actual</span>
+        <span class="value">
+          {% if match.played %}{{ match.home_goals }}&ndash;{{ match.away_goals }}{% else %}&mdash;{% endif %}
+        </span>
+      </div>
+      <span class="xg">xG {{ '%.2f' % match.exp_home_goals }}&ndash;{{ '%.2f' % match.exp_away_goals }}</span>
+    </div>
+  {% else %}
+    <div class="match-prediction no-pred">No prediction stored for this match.</div>
+    <div class="match-score"></div>
+  {% endif %}
+</article>
+{% endmacro %}

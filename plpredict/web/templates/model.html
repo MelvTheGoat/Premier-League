@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block title %}Model &middot; PL Predictor{% endblock %}
+
+{% block content %}
+<h1>How the predictions are made</h1>
+
+<section class="card">
+  <h2>Two models, two jobs</h2>
+  <p>
+    The <strong>outcome model</strong> answers "who wins?" as a three-way
+    probability. It is a gradient-boosted classifier blended with a multinomial
+    logistic regression: the booster finds the interactions between contextual
+    features, the linear model keeps the probabilities honest early in a season
+    when the booster has little to go on.
+  </p>
+  <p>
+    The <strong>scoreline model</strong> answers a different question and uses a
+    tool suited to it: a Dixon-Coles bivariate Poisson goal model, which gives
+    each club an attack and a defence strength, applies a shared home advantage
+    and a correction for low-scoring draws, and weights recent matches more
+    heavily. Exact scores are much harder to call than outcomes, so the site
+    shows the predicted and actual scores side by side without marking them
+    right or wrong.
+  </p>
+</section>
+
+<section class="card">
+  <h2>Context as features, not overrides</h2>
+  <p>
+    Nothing here nudges a prediction by hand. Every contextual signal is turned
+    into a number and handed to the model, which decides for itself how much it
+    is worth:
+  </p>
+  <ul class="feature-list">
+    <li><strong>Form</strong> - points, goals and shots over the last 4, 6 and 10 games, across all competitions.</li>
+    <li><strong>Strength</strong> - a cross-division Elo rating, so promoted clubs arrive with a real rating rather than a blank one.</li>
+    <li><strong>Table context</strong> - position, and the points gap to the title, to Europe and to the relegation zone. What a club is playing for changes as the season goes on.</li>
+    <li><strong>Fixture congestion</strong> - days of rest, matches in the last fortnight, midweek kick-offs and European commitments: the ingredients of rotation risk.</li>
+    <li><strong>Manager</strong> - tenure length, games under the current manager, and the change in results either side of an appointment.</li>
+    <li><strong>Availability</strong> - how many first-team regulars and key players are missing.</li>
+    <li><strong>Squad quality</strong> - FIFA/EA FC squad ratings as a proxy for quality on paper, standardised within a season, with the age of the rating supplied so the model can discount a stale one.</li>
+    <li><strong>Head to head</strong> - recent meetings, home and away splits, and how long since the two last met.</li>
+  </ul>
+</section>
+
+{% if run %}
+<section class="card">
+  <h2>Latest training run</h2>
+  <dl class="run-facts">
+    <div><dt>Target</dt><dd>{{ run.target_season }} gameweek {{ run.target_matchday }}</dd></div>
+    <div><dt>Trained on matches up to</dt><dd>{{ run.trained_through }}</dd></div>
+    <div><dt>Training matches</dt><dd>{{ run.n_training_matches }}</dd></div>
+    <div><dt>Features used</dt><dd>{{ run.metrics.n_features }} of {{ run.metrics.n_candidate_features }} available</dd></div>
+    <div><dt>Boosting rounds (chosen by early stopping)</dt><dd>{{ run.metrics.boosting_rounds }}</dd></div>
+    <div><dt>Goal model fitted on</dt><dd>{{ run.metrics.scoreline_matches }} matches</dd></div>
+    <div><dt>Feature version</dt><dd>{{ run.feature_version }}</dd></div>
+    <div><dt>Run at</dt><dd>{{ run.created_at }}</dd></div>
+  </dl>
+
+  {% if run.metrics.top_features %}
+    <h3>What the outcome model leaned on most</h3>
+    <ol class="importance">
+      {% for name, weight in run.metrics.top_features %}
+        <li><code>{{ name }}</code></li>
+      {% endfor %}
+    </ol>
+  {% endif %}
+</section>
+{% endif %}
+
+<section class="card">
+  <h2>How the rolling retrain works</h2>
+  <p>
+    Predictions for gameweek N are made by a model trained only on matches played
+    before that gameweek's first kick-off - no exceptions, in training or in
+    serving. Once the gameweek finishes, its results are ingested and the model is
+    retrained before gameweek N+1 is predicted, so every week the model has learned
+    from the one before.
+  </p>
+  <p>
+    Predictions are never rewritten. Each run is stored with what it was trained
+    on, so the history above shows what was actually forecast at the time rather
+    than what today's model would say with hindsight.
+  </p>
+</section>
+{% endblock %}
