@@ -276,22 +276,45 @@ a few minutes. Later runs `git pull` them and take well under a minute.
 
 ### After every gameweek
 
+This is automated — see below — but the manual equivalent is:
+
 ```bash
 .venv/bin/python scripts/run_pipeline.py
 .venv/bin/python scripts/export_web_db.py
 ```
 
 Ingest the new results, rebuild the features, retrain, predict the next
-gameweek, then refresh the small database the site serves. Cron it for a
-few hours after a typical gameweek's last fixture:
+gameweek, then refresh the small database the site serves. Running
+locally, the web app needs no restart; it reads the database on each
+request.
 
-```cron
-0 6 * * TUE  cd /path/to/repo && .venv/bin/python scripts/run_pipeline.py && .venv/bin/python scripts/export_web_db.py
-```
+### Automated updates
 
-Running locally, the web app needs no restart — it reads the database on
-each request. Deployed, commit and push the refreshed
-`data/web/plpredict-web.db` to publish the new gameweek.
+`.github/workflows/update-predictions.yml` does the whole loop and
+commits the refreshed serving database, which is what makes the site
+self-updating: the push triggers a redeploy, and nothing retrains on the
+host.
+
+It runs **every morning at 06:00 UTC** rather than on a weekly schedule,
+because fixtures do not keep to one. A gameweek can be spread over four
+days or sit a fortnight away behind an international break. Instead of
+guessing, each run ingests the latest results and compares two numbers —
+how many matches have been played this season, and which gameweek is
+next — against the database the site is currently serving. If they
+match, the run stops there: no retrain, no commit, no redeploy. A quiet
+day costs about a minute of CI and changes nothing.
+
+Before anything is committed the workflow serves the freshly exported
+database and checks that the pages render. A published database the site
+cannot read would take the whole site down until someone noticed, and
+that check costs seconds.
+
+To publish immediately without waiting for the schedule, run the
+workflow by hand from the Actions tab; the **force** input retrains and
+publishes even when no new results have arrived.
+
+The workflow needs no secrets — the built-in `GITHUB_TOKEN` is enough,
+with `contents: write` to push.
 
 ---
 
@@ -325,8 +348,8 @@ function stays well inside the size limit; the full ML stack would not.
 `includeFiles` in `vercel.json` is what ships the serving database
 alongside the function.
 
-To publish a new gameweek, run the pipeline and the export, then commit
-and push — the deployment rebuilds from the committed database. Nothing
+New gameweeks are published by the scheduled workflow, which commits the
+refreshed serving database; the push triggers the redeploy. Nothing
 retrains on the host.
 
 ### Anywhere else
@@ -413,6 +436,7 @@ plpredict/
   pipeline/run.py            ── the rolling retrain loop
   web/                       ── Flask app, templates, CSS
 
+.github/workflows/          scheduled update job
 api/index.py                 serverless entrypoint (Vercel)
 vercel.json                  deployment config
 scripts/                     thin CLI wrappers

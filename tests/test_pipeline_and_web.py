@@ -8,6 +8,7 @@ import pytest
 from plpredict import db
 from plpredict.features.build import FeatureBuilder
 from plpredict.pipeline.run import (
+    data_fingerprint,
     gameweek_cutoff,
     last_completed_gameweek,
     load_match_frame,
@@ -243,3 +244,76 @@ def test_read_only_connection_refuses_to_create_a_database(tmp_path):
         with db.connect(tmp_path / "missing.db", read_only=True):
             pass
     assert not (tmp_path / "missing.db").exists()
+
+
+def test_fingerprint_tracks_results_and_the_next_gameweek(predicted_db):
+    with db.connect(predicted_db) as conn:
+        played, upcoming = data_fingerprint(conn, SEASON)
+        assert played > 0
+        assert upcoming == next_unplayed_gameweek(conn, SEASON)
+
+        # Playing the next gameweek moves both numbers.
+        conn.execute(
+            """
+            UPDATE matches SET status = 'played', home_goals = 1, away_goals = 1,
+                               result = 'D'
+            WHERE season = ? AND matchday = ? AND competition = 'premier_league'
+            """,
+            (SEASON, upcoming),
+        )
+        after = data_fingerprint(conn, SEASON)
+    assert after[0] > played
+    assert after[1] != upcoming
+
+
+def test_scheduled_run_stops_when_nothing_has_been_played(predicted_db, tmp_path, monkeypatch):
+    """The job runs daily; fixtures do not. A quiet day must cost nothing."""
+    import plpredict.pipeline.run as pipeline
+
+    serving = tmp_path / "serving.db"
+    export(predicted_db, serving, season=None)
+    monkeypatch.setattr(pipeline.config, "WEB_DB_PATH", serving)
+    monkeypatch.setattr(pipeline.ingest, "run", lambda **kwargs: _NoopReport())
+
+    trained: list[int] = []
+    monkeypatch.setattr(pipeline, "train_and_predict", _recording_train_and_predict(trained))
+    monkeypatch.setattr(pipeline, "build_features", lambda db_path=None: _features(predicted_db))
+    monkeypatch.setattr(pipeline, "store_features", lambda frame, db_path=None: 0)
+
+    results = pipeline.run(
+        season=SEASON, refresh_source=False, skip_if_unchanged=True,
+        db_path=predicted_db, verbose=False,
+    )
+    assert results == []
+    assert trained == [], "nothing should be retrained when no results have arrived"
+
+
+def test_scheduled_run_proceeds_once_a_gameweek_is_played(predicted_db, tmp_path, monkeypatch):
+    import plpredict.pipeline.run as pipeline
+
+    # A serving database exported before the latest gameweek was played.
+    serving = tmp_path / "stale.db"
+    export(predicted_db, serving, season=None)
+    with db.connect(serving) as conn:
+        upcoming = next_unplayed_gameweek(conn, SEASON)
+        conn.execute(
+            """
+            UPDATE matches SET status = 'scheduled', home_goals = NULL,
+                               away_goals = NULL, result = NULL
+            WHERE season = ? AND matchday = ? AND competition = 'premier_league'
+            """,
+            (SEASON, (upcoming or 2) - 1),
+        )
+    monkeypatch.setattr(pipeline.config, "WEB_DB_PATH", serving)
+    monkeypatch.setattr(pipeline.ingest, "run", lambda **kwargs: _NoopReport())
+
+    trained: list[int] = []
+    monkeypatch.setattr(pipeline, "train_and_predict", _recording_train_and_predict(trained))
+    monkeypatch.setattr(pipeline, "build_features", lambda db_path=None: _features(predicted_db))
+    monkeypatch.setattr(pipeline, "store_features", lambda frame, db_path=None: 0)
+
+    pipeline.run(
+        season=SEASON, refresh_source=False, skip_if_unchanged=True,
+        db_path=predicted_db, verbose=False,
+    )
+    assert trained, "a newly played gameweek must trigger a retrain"

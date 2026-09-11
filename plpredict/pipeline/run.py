@@ -105,6 +105,35 @@ def last_completed_gameweek(conn: sqlite3.Connection, season: str) -> int | None
     return int(row[0]) if row and row[0] is not None else None
 
 
+def data_fingerprint(conn: sqlite3.Connection, season: str) -> tuple[int, int | None]:
+    """What the pipeline would have to work with, reduced to two numbers.
+
+    A scheduled job runs on a calendar, but fixtures do not: a gameweek
+    can be a fortnight away during an international break. Comparing how
+    many matches have been played and which gameweek is next tells the
+    job whether anything has actually happened since it last published,
+    so it can stop before retraining and committing a new database that
+    would say exactly the same thing.
+    """
+    played = conn.execute(
+        """
+        SELECT COUNT(*) FROM matches
+        WHERE season = ? AND competition = ? AND status = 'played'
+        """,
+        (season, config.TARGET_COMPETITION),
+    ).fetchone()[0]
+    return int(played), next_unplayed_gameweek(conn, season)
+
+
+def published_fingerprint(season: str) -> tuple[int, int | None] | None:
+    """The same two numbers for the database the site is currently serving."""
+    web_db = Path(config.WEB_DB_PATH)
+    if not web_db.is_file():
+        return None
+    with db.connect(web_db, read_only=True) as conn:
+        return data_fingerprint(conn, season)
+
+
 def train_and_predict(
     conn: sqlite3.Connection,
     features: pd.DataFrame,
@@ -242,6 +271,7 @@ def run(
     matchday: int | None = None,
     refresh_source: bool = True,
     backfill: bool = False,
+    skip_if_unchanged: bool = False,
     db_path: Path | None = None,
     verbose: bool = True,
 ) -> list[GameweekResult]:
@@ -256,12 +286,25 @@ def run(
     if verbose:
         print(f"Ingest: {report.summary()}")
 
+    season = season or config.CURRENT_SEASON
+
+    if skip_if_unchanged:
+        published = published_fingerprint(season)
+        with db.connect(db_path) as conn:
+            current = data_fingerprint(conn, season)
+        if published is not None and published == current:
+            if verbose:
+                print(
+                    f"No new results: {current[0]} matches played, "
+                    f"gameweek {current[1]} still to come. Nothing to publish."
+                )
+            return []
+
     features = build_features(db_path)
     store_features(features, db_path)
     if verbose:
         print(f"Features: {len(features)} matches, {len(feature_columns(features))} columns")
 
-    season = season or config.CURRENT_SEASON
     results: list[GameweekResult] = []
 
     with db.connect(db_path) as conn:

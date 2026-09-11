@@ -22,6 +22,7 @@ Cron it for a few hours after the last fixture of a typical gameweek:
 from __future__ import annotations
 
 import argparse
+import os
 import sys
 from pathlib import Path
 
@@ -29,6 +30,21 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from plpredict import config  # noqa: E402
 from plpredict.pipeline import run as pipeline  # noqa: E402
+
+
+def _report_changed(changed: bool) -> None:
+    """Tell a CI job whether anything was produced.
+
+    Written to GITHUB_OUTPUT when running under GitHub Actions so the
+    workflow can decide whether to commit, and echoed either way so the
+    same signal is visible in a terminal.
+    """
+    value = "true" if changed else "false"
+    print(f"changed={value}")
+    output = os.environ.get("GITHUB_OUTPUT")
+    if output:
+        with open(output, "a", encoding="utf-8") as handle:
+            handle.write(f"changed={value}\n")
 
 
 def main() -> int:
@@ -45,6 +61,15 @@ def main() -> int:
         action="store_true",
         help="Skip the source refresh and use the local checkouts as they are.",
     )
+    parser.add_argument(
+        "--skip-if-unchanged",
+        action="store_true",
+        help=(
+            "Stop after ingest if no new results have arrived since the "
+            "database the site is serving. Intended for a scheduled job, "
+            "which runs on a calendar while fixtures do not."
+        ),
+    )
     args = parser.parse_args()
 
     results = pipeline.run(
@@ -52,9 +77,11 @@ def main() -> int:
         matchday=args.matchday,
         refresh_source=not args.offline,
         backfill=args.backfill,
+        skip_if_unchanged=args.skip_if_unchanged,
     )
+    _report_changed(bool(results))
     if not results:
-        print("Nothing to predict: every gameweek in the season already has predictions.")
+        print("Nothing new to publish.")
         return 0
 
     latest = results[-1]
