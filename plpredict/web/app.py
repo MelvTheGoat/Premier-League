@@ -8,6 +8,7 @@ finishes a gameweek.
 
 from __future__ import annotations
 
+from pathlib import Path
 from typing import Any
 
 from flask import Flask, abort, jsonify, redirect, render_template, url_for
@@ -16,12 +17,33 @@ from plpredict import config, db
 from plpredict.web import queries
 
 
+def resolve_database(db_path: str | None = None) -> tuple[Path, bool]:
+    """Pick the database to serve, and whether to open it read-only.
+
+    Preference order is an explicitly supplied path, then the committed
+    serving database, then the pipeline's working database. Only the
+    serving database is opened read-only: it is exported without a
+    write-ahead log precisely so it can be, which is what lets the site
+    run on a host with a read-only filesystem. The working database is
+    in WAL mode, where an immutable read could miss a commit the
+    pipeline has just made.
+    """
+    if db_path:
+        return Path(db_path), False
+    web_db = Path(config.WEB_DB_PATH)
+    if web_db.is_file():
+        return web_db, True
+    return Path(config.DB_PATH), False
+
+
 def create_app(db_path: str | None = None) -> Flask:
     app = Flask(__name__)
-    app.config["DB_PATH"] = db_path
+    resolved, read_only = resolve_database(db_path)
+    app.config["DB_PATH"] = str(resolved)
+    app.config["DB_READ_ONLY"] = read_only
 
     def _connection():
-        return db.connect(app.config["DB_PATH"])
+        return db.connect(app.config["DB_PATH"], read_only=app.config["DB_READ_ONLY"])
 
     @app.template_filter("percent")
     def percent(value: float | None, places: int = 0) -> str:

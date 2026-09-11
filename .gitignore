@@ -12,6 +12,10 @@ data/raw/
 data/db/
 *.db
 *.sqlite3
+# ...except the slim serving database, which is committed so the website
+# can be deployed without running the pipeline. Rebuild it with
+# scripts/export_web_db.py after each pipeline run.
+!data/web/plpredict-web.db
 models/artifacts/
 *.pkl
 *.joblib

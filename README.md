@@ -255,15 +255,21 @@ commitment, one row per club per season. Changes once a year.
 
 ```bash
 git clone <this repo> && cd Premier-League
-python -m venv .venv && .venv/bin/pip install -r requirements.txt
+python -m venv .venv && .venv/bin/pip install -r requirements-pipeline.txt
 
 # First run: clone the source archives, build everything, and replay the
 # gameweeks already played so the history page is populated
 .venv/bin/python scripts/run_pipeline.py --backfill
+.venv/bin/python scripts/export_web_db.py
 
 # Then browse
 .venv/bin/python scripts/serve.py          # http://127.0.0.1:5000
 ```
+
+`requirements.txt` holds Flask and nothing else — it is what a
+deployment installs, because the web layer imports no part of the data
+or modelling stack. `requirements-pipeline.txt` adds pandas, LightGBM
+and the rest, and is what you want locally.
 
 The first run clones two source repositories into `data/raw/` and takes
 a few minutes. Later runs `git pull` them and take well under a minute.
@@ -272,17 +278,69 @@ a few minutes. Later runs `git pull` them and take well under a minute.
 
 ```bash
 .venv/bin/python scripts/run_pipeline.py
+.venv/bin/python scripts/export_web_db.py
 ```
 
 Ingest the new results, rebuild the features, retrain, predict the next
-gameweek. Cron it for a few hours after a typical gameweek's last
-fixture:
+gameweek, then refresh the small database the site serves. Cron it for a
+few hours after a typical gameweek's last fixture:
 
 ```cron
-0 6 * * TUE  cd /path/to/repo && .venv/bin/python scripts/run_pipeline.py
+0 6 * * TUE  cd /path/to/repo && .venv/bin/python scripts/run_pipeline.py && .venv/bin/python scripts/export_web_db.py
 ```
 
-The web app needs no restart — it reads the database on each request.
+Running locally, the web app needs no restart — it reads the database on
+each request. Deployed, commit and push the refreshed
+`data/web/plpredict-web.db` to publish the new gameweek.
+
+---
+
+## Deploying the site
+
+The web layer is deliberately separable from everything else: it loads
+no model, computes nothing on a request, and reads a single pre-built
+SQLite file. That makes it deployable as a small serverless function
+with no database server and no writable disk.
+
+`data/web/plpredict-web.db` is committed for exactly this reason. It is
+built by `scripts/export_web_db.py`, which copies out only what the
+pages query — Premier League fixtures, the predictions of record and the
+model-run metadata. That is about 1.4 MB, against 61 MB for the working
+database, most of which is the feature table no page touches. It is
+exported without a write-ahead log so it can be opened read-only, which
+is what a read-only filesystem requires.
+
+### Vercel
+
+`vercel.json` and `api/index.py` are set up already:
+
+```bash
+npm i -g vercel
+vercel            # preview
+vercel --prod     # production
+```
+
+Vercel installs the root `requirements.txt` (Flask alone), so the
+function stays well inside the size limit; the full ML stack would not.
+`includeFiles` in `vercel.json` is what ships the serving database
+alongside the function.
+
+To publish a new gameweek, run the pipeline and the export, then commit
+and push — the deployment rebuilds from the committed database. Nothing
+retrains on the host.
+
+### Anywhere else
+
+Any WSGI host works, with no Vercel-specific pieces involved:
+
+```bash
+pip install -r requirements.txt gunicorn
+gunicorn 'plpredict.web.app:app'
+```
+
+Set `PLPRED_WEB_DB` to serve a database from another location. If no
+serving database is present, the app falls back to the pipeline's
+working database, which is what happens during local development.
 
 ### Other commands
 
@@ -355,8 +413,11 @@ plpredict/
   pipeline/run.py            ── the rolling retrain loop
   web/                       ── Flask app, templates, CSS
 
+api/index.py                 serverless entrypoint (Vercel)
+vercel.json                  deployment config
 scripts/                     thin CLI wrappers
 data/manual/                 hand-maintained context (versioned)
+data/web/                    the committed serving database
 tests/
 ```
 

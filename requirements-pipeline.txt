@@ -1,0 +1,11 @@
+# Dependencies for the data pipeline, feature engineering and models.
+# Installing this also covers everything in requirements.txt.
+-r requirements.txt
+
+pandas>=2.2
+numpy>=1.26
+scikit-learn>=1.4
+scipy>=1.12
+lightgbm>=4.3
+statsmodels>=0.14
+requests>=2.31

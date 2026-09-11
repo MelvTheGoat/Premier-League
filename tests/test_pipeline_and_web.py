@@ -15,6 +15,7 @@ from plpredict.pipeline.run import (
     train_and_predict,
 )
 from plpredict.web import queries
+from plpredict.web.export import export
 from plpredict.web.app import create_app
 
 SEASON = "2026-27"
@@ -201,3 +202,44 @@ def _recording_train_and_predict(calls):
         )
 
     return recorder
+
+
+def test_export_keeps_only_what_the_pages_read(predicted_db, tmp_path):
+    exported = tmp_path / "serving.db"
+    counts = export(predicted_db, exported, season=None)
+
+    assert counts["matches"] > 0
+    assert counts["current_predictions"] > 0
+    assert exported.stat().st_size < predicted_db.stat().st_size
+
+    with db.connect(exported, read_only=True) as conn:
+        tables = {
+            row[0]
+            for row in conn.execute("SELECT name FROM sqlite_master WHERE type = 'table'")
+        }
+    # The feature table is the bulk of the working database and no page
+    # touches it, so it must not be shipped.
+    assert "features" not in tables
+    assert {"matches", "predictions", "current_predictions", "model_runs"} <= tables
+
+
+def test_site_serves_from_a_read_only_file(predicted_db, tmp_path):
+    """A deployed function gets a read-only filesystem; this must still work."""
+    exported = tmp_path / "serving.db"
+    export(predicted_db, exported, season=None)
+    exported.chmod(0o444)
+
+    client = create_app(str(exported)).test_client()
+    assert client.get(f"/season/{SEASON}/gameweek/1").status_code == 200
+
+    # And the same file opened explicitly read-only, which is how the app
+    # opens the committed serving database.
+    with db.connect(exported, read_only=True) as conn:
+        assert queries.gameweek(conn, SEASON, 1)["matches"]
+
+
+def test_read_only_connection_refuses_to_create_a_database(tmp_path):
+    with pytest.raises(FileNotFoundError):
+        with db.connect(tmp_path / "missing.db", read_only=True):
+            pass
+    assert not (tmp_path / "missing.db").exists()

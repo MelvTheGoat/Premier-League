@@ -172,9 +172,34 @@ CREATE TABLE IF NOT EXISTS current_predictions (
 
 
 @contextmanager
-def connect(path: Path | str | None = None) -> Iterator[sqlite3.Connection]:
-    """Open the database, creating its directory and schema on demand."""
+def connect(
+    path: Path | str | None = None, *, read_only: bool = False
+) -> Iterator[sqlite3.Connection]:
+    """Open the database, creating its directory and schema on demand.
+
+    ``read_only`` opens the file without creating anything and without
+    applying the schema. Serverless hosts give a function a read-only
+    filesystem, so an ordinary connection fails there the moment SQLite
+    tries to write a journal — and the web layer only ever reads.
+    """
     db_path = Path(path or config.DB_PATH)
+
+    if read_only:
+        if not db_path.is_file():
+            raise FileNotFoundError(
+                f"No database at {db_path}. Build the serving database with "
+                "scripts/export_web_db.py, or point PLPRED_DB at one."
+            )
+        conn = sqlite3.connect(
+            f"file:{db_path}?mode=ro&immutable=1", uri=True, timeout=30
+        )
+        conn.row_factory = sqlite3.Row
+        try:
+            yield conn
+        finally:
+            conn.close()
+        return
+
     db_path.parent.mkdir(parents=True, exist_ok=True)
     conn = sqlite3.connect(db_path, timeout=30)
     conn.row_factory = sqlite3.Row

@@ -1,8 +1,9 @@
-pandas>=2.2
-numpy>=1.26
-scikit-learn>=1.4
-scipy>=1.12
-lightgbm>=4.3
-statsmodels>=0.14
+# Runtime dependencies for the website only.
+#
+# The web layer reads a pre-built SQLite file and renders templates; it
+# imports no part of the data or modelling stack. Keeping this file to
+# Flask alone is what lets the site deploy as a small serverless
+# function instead of shipping several hundred megabytes of ML wheels.
+#
+# For the data pipeline and models, install requirements-pipeline.txt.
 Flask>=3.0
-requests>=2.31

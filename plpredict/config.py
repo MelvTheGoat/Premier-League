@@ -27,6 +27,10 @@ RAW_DIR = DATA_DIR / "raw"
 MANUAL_DIR = DATA_DIR / "manual"
 EXTERNAL_DIR = DATA_DIR / "external"
 DB_PATH = _path("PLPRED_DB", DATA_DIR / "db" / "plpredict.db")
+# The slim, read-only database the website serves from. Built by
+# scripts/export_web_db.py and committed, so a deployment needs no data
+# pipeline and no writable disk.
+WEB_DB_PATH = _path("PLPRED_WEB_DB", DATA_DIR / "web" / "plpredict-web.db")
 MODEL_DIR = _path("PLPRED_MODEL_DIR", PROJECT_ROOT / "models" / "artifacts")
 
 # The season the platform is currently predicting, in openfootball's
