@@ -12,6 +12,10 @@ scripts/serve.py          →  a small web app that reads what was stored
 
 ---
 
+For the design decisions behind all of this — how each contextual signal
+was turned into a feature, what the model measures out at, and where it is
+weak — see [`docs/HOW_IT_WAS_BUILT.md`](docs/HOW_IT_WAS_BUILT.md).
+
 ## The idea
 
 A scoreline and a league table describe what happened. They do not
