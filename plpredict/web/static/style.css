@@ -111,6 +111,7 @@ code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 1
 .tag.done { background: color-mix(in srgb, var(--ok) 16%, transparent); color: var(--ok); }
 .tag.live { background: color-mix(in srgb, var(--away) 18%, transparent); color: var(--away); }
 .tag.upcoming { background: var(--surface-2); color: var(--muted); }
+.tag.late { background: color-mix(in srgb, var(--away) 18%, transparent); color: var(--away); }
 
 .notice, .footnote {
   background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--home);
@@ -118,6 +119,8 @@ code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 1
   font-size: 13.5px; margin: 16px 0;
 }
 .footnote { border-left-color: var(--draw); }
+.notice-warn { border-left-color: var(--away); }
+.notice-warn strong { color: var(--away); }
 
 /* --- gameweek chips --- */
 

@@ -46,7 +46,15 @@
   {% endfor %}
 </nav>
 
-{% if not data.any_played %}
+{% if data.published_late %}
+  <p class="notice notice-warn">
+    <strong>Published after kick-off.</strong> These predictions were stored after
+    this gameweek had already begun, so they were not a live forecast. The model
+    still saw none of these results — features are always computed from the state
+    before a gameweek's first fixture — but that is a weaker claim than a
+    prediction made in advance, so it is marked rather than left to look like one.
+  </p>
+{% elif not data.any_played %}
   <p class="notice">
     These are the predictions published before this gameweek kicked off. The model
     that made them was trained only on matches played before the first fixture below.

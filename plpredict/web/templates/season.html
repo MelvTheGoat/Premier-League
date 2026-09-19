@@ -50,6 +50,7 @@
           {% if week.is_complete %}<span class="tag done">Completed</span>
           {% elif week.played %}<span class="tag live">In progress</span>
           {% else %}<span class="tag upcoming">Upcoming</span>{% endif %}
+          {% if week.published_late %}<span class="tag late" title="Predictions stored after this gameweek kicked off">Late</span>{% endif %}
         </td>
         <td class="num">{% if week.n_scored %}{{ week.n_correct }}/{{ week.n_scored }}{% else %}&mdash;{% endif %}</td>
         <td class="num">{% if week.accuracy is not none %}{{ week.accuracy | percent(0) }}{% else %}&mdash;{% endif %}</td>

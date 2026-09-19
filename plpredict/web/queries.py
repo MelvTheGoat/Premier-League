@@ -18,7 +18,27 @@ from plpredict.data.teams import display_name
 _OUTCOME_LABELS = {"H": "Home win", "D": "Draw", "A": "Away win"}
 
 
-def _row_to_match(row: sqlite3.Row) -> dict[str, Any]:
+def _published_before_kickoff(row: sqlite3.Row, first_kickoff: dt.datetime | None) -> bool | None:
+    """Was this prediction actually published before the gameweek began?
+
+    The model itself cannot cheat — features are always computed from the
+    state before a gameweek's first kick-off, so a late run still knows
+    nothing about the gameweek. But a forecast published after play has
+    started is not the same claim as one published before it, and a
+    reader has no way to tell the two apart from the numbers alone.
+    """
+    if row["predicted_at"] is None or first_kickoff is None:
+        return None
+    try:
+        published = dt.datetime.fromisoformat(row["predicted_at"])
+    except ValueError:
+        return None
+    if published.tzinfo is None:
+        published = published.replace(tzinfo=dt.timezone.utc)
+    return published <= first_kickoff
+
+
+def _row_to_match(row: sqlite3.Row, first_kickoff: dt.datetime | None = None) -> dict[str, Any]:
     played = row["home_goals"] is not None and row["away_goals"] is not None
     predicted = row["predicted_outcome"]
     probabilities = (
@@ -55,6 +75,8 @@ def _row_to_match(row: sqlite3.Row) -> dict[str, Any]:
         "scoreline_prob": row["scoreline_prob"],
         "outcome_correct": correct,
         "run_id": row["run_id"],
+        "predicted_at": row["predicted_at"],
+        "published_before_kickoff": _published_before_kickoff(row, first_kickoff),
     }
 
 
@@ -63,7 +85,8 @@ _GAMEWEEK_QUERY = """
            m.home_goals, m.away_goals, m.result,
            p.predicted_outcome, p.p_home, p.p_draw, p.p_away,
            p.pred_home_goals, p.pred_away_goals,
-           p.exp_home_goals, p.exp_away_goals, p.scoreline_prob, p.run_id
+           p.exp_home_goals, p.exp_away_goals, p.scoreline_prob, p.run_id,
+           p.created_at AS predicted_at
     FROM matches m
     LEFT JOIN current_predictions cp ON cp.match_id = m.match_id
     LEFT JOIN predictions p
@@ -73,11 +96,41 @@ _GAMEWEEK_QUERY = """
 """
 
 
+def _first_kickoff(rows: list[sqlite3.Row]) -> dt.datetime | None:
+    """When the gameweek began, in UTC.
+
+    Kick-off times in the archive are local, which through the season is
+    either UTC or UTC+1. The hour either way is close enough for a
+    before/after-kick-off judgement, and treating them as UTC is the
+    conservative reading: it can only make a borderline prediction look
+    late, never early.
+    """
+    stamps = []
+    for row in rows:
+        if not row["match_date"]:
+            continue
+        try:
+            date = dt.date.fromisoformat(row["match_date"])
+        except ValueError:
+            continue
+        hour, minute = 0, 0
+        if row["kickoff"] and ":" in row["kickoff"]:
+            try:
+                hour, minute = (int(part) for part in row["kickoff"].split(":")[:2])
+            except ValueError:
+                hour, minute = 0, 0
+        stamps.append(
+            dt.datetime(date.year, date.month, date.day, hour, minute, tzinfo=dt.timezone.utc)
+        )
+    return min(stamps) if stamps else None
+
+
 def gameweek(conn: sqlite3.Connection, season: str, matchday: int) -> dict[str, Any]:
     rows = conn.execute(
         _GAMEWEEK_QUERY, (season, config.TARGET_COMPETITION, matchday)
     ).fetchall()
-    matches = [_row_to_match(row) for row in rows]
+    first_kickoff = _first_kickoff(rows)
+    matches = [_row_to_match(row, first_kickoff) for row in rows]
     scored = [match for match in matches if match["outcome_correct"] is not None]
     exact = [
         match
@@ -101,6 +154,10 @@ def gameweek(conn: sqlite3.Connection, season: str, matchday: int) -> dict[str, 
             else None
         ),
         "dates": sorted({match["date"] for match in matches if match["date"]}),
+        "published_late": any(
+            match["published_before_kickoff"] is False for match in matches
+        ),
+        "first_kickoff": first_kickoff.isoformat() if first_kickoff else None,
     }
 
 
@@ -117,7 +174,9 @@ def season_gameweeks(conn: sqlite3.Connection, season: str) -> list[dict[str, An
                SUM(CASE WHEN m.result IS NOT NULL
                          AND p.predicted_outcome = m.result THEN 1 ELSE 0 END) AS correct,
                SUM(CASE WHEN m.result IS NOT NULL
-                         AND p.predicted_outcome IS NOT NULL THEN 1 ELSE 0 END) AS scored
+                         AND p.predicted_outcome IS NOT NULL THEN 1 ELSE 0 END) AS scored,
+               MIN(m.match_date || ' ' || COALESCE(m.kickoff, '00:00')) AS first_kickoff,
+               MIN(p.created_at) AS first_predicted_at
         FROM matches m
         LEFT JOIN current_predictions cp ON cp.match_id = m.match_id
         LEFT JOIN predictions p
@@ -140,6 +199,12 @@ def season_gameweeks(conn: sqlite3.Connection, season: str) -> list[dict[str, An
             "n_scored": row["scored"] or 0,
             "n_correct": row["correct"] or 0,
             "accuracy": (row["correct"] / row["scored"]) if row["scored"] else None,
+            "published_late": (
+                row["first_predicted_at"] is not None
+                and row["first_kickoff"] is not None
+                and row["first_predicted_at"][:16].replace("T", " ")
+                > row["first_kickoff"][:16]
+            ),
         }
         for row in rows
     ]

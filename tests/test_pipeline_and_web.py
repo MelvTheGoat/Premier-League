@@ -42,6 +42,20 @@ def predicted_db(seeded_db):
     return seeded_db
 
 
+@pytest.fixture
+def scratch_db(predicted_db, tmp_path):
+    """A disposable copy of the predicted database.
+
+    ``predicted_db`` is module-scoped because running the pipeline over
+    it is slow, so any test that writes must work on a copy — otherwise
+    it leaks state into every test that follows and the suite starts
+    depending on the order it happens to run in.
+    """
+    copy = tmp_path / "scratch.db"
+    copy.write_bytes(predicted_db.read_bytes())
+    return copy
+
+
 def test_training_set_grows_with_each_gameweek(predicted_db):
     with db.connect(predicted_db) as conn:
         runs = conn.execute(
@@ -85,9 +99,9 @@ def test_every_fixture_gets_exactly_one_current_prediction(predicted_db):
     assert rows["n"] == rows["distinct_matches"]
 
 
-def test_predictions_are_kept_not_overwritten(predicted_db):
+def test_predictions_are_kept_not_overwritten(scratch_db):
     """Re-predicting a gameweek adds a run; the old one stays on record."""
-    with db.connect(predicted_db) as conn:
+    with db.connect(scratch_db) as conn:
         features = FeatureBuilder(conn).build()
         matches = load_match_frame(conn)
         before = conn.execute("SELECT COUNT(*) FROM model_runs").fetchone()[0]
@@ -246,8 +260,8 @@ def test_read_only_connection_refuses_to_create_a_database(tmp_path):
     assert not (tmp_path / "missing.db").exists()
 
 
-def test_fingerprint_tracks_results_and_the_next_gameweek(predicted_db):
-    with db.connect(predicted_db) as conn:
+def test_fingerprint_tracks_results_and_the_next_gameweek(scratch_db):
+    with db.connect(scratch_db) as conn:
         played, upcoming = data_fingerprint(conn, SEASON)
         assert played > 0
         assert upcoming == next_unplayed_gameweek(conn, SEASON)
@@ -317,3 +331,90 @@ def test_scheduled_run_proceeds_once_a_gameweek_is_played(predicted_db, tmp_path
         db_path=predicted_db, verbose=False,
     )
     assert trained, "a newly played gameweek must trigger a retrain"
+
+
+def test_history_survives_a_rebuilt_database(predicted_db, tmp_path, monkeypatch):
+    """A scheduled run starts with no working database and must not erase history.
+
+    `data/db/` is a build artefact, so CI rebuilds it from source every
+    run and predicts only the next gameweek. Without restoring the
+    published record, the exported database would contain that gameweek
+    alone and every earlier forecast would vanish.
+    """
+    import plpredict.pipeline.run as pipeline
+
+    serving = tmp_path / "serving.db"
+    export(predicted_db, serving, season=None)
+    with db.connect(serving, read_only=True) as conn:
+        before = conn.execute("SELECT COUNT(*) FROM current_predictions").fetchone()[0]
+    assert before > 10, "fixture should have several gameweeks of history"
+
+    # A rebuilt working database: matches present, no predictions at all.
+    rebuilt = tmp_path / "rebuilt.db"
+    with db.connect(predicted_db, read_only=True) as origin, db.connect(rebuilt) as fresh:
+        rows = [tuple(r) for r in origin.execute("SELECT * FROM matches")]
+        placeholders = ", ".join("?" for _ in rows[0])
+        fresh.executemany(f"INSERT INTO matches VALUES ({placeholders})", rows)
+
+    with db.connect(rebuilt) as conn:
+        assert conn.execute("SELECT COUNT(*) FROM current_predictions").fetchone()[0] == 0
+        restored = pipeline.restore_prediction_history(conn, serving)
+        after = conn.execute("SELECT COUNT(*) FROM current_predictions").fetchone()[0]
+    assert restored > 0
+    assert after == before, "every published prediction should come back"
+
+
+def test_restoring_history_never_rewrites_a_past_forecast(scratch_db, tmp_path):
+    """Restoring is append-only: what was forecast at the time stands."""
+    import plpredict.pipeline.run as pipeline
+
+    serving = tmp_path / "serving.db"
+    export(scratch_db, serving, season=None)
+
+    with db.connect(scratch_db) as conn:
+        original = conn.execute(
+            "SELECT match_id, run_id FROM current_predictions ORDER BY match_id LIMIT 1"
+        ).fetchone()
+        pipeline.restore_prediction_history(conn, serving)
+        after = conn.execute(
+            "SELECT run_id FROM current_predictions WHERE match_id = ?",
+            (original["match_id"],),
+        ).fetchone()
+    assert after["run_id"] == original["run_id"]
+
+
+def test_restoring_history_is_a_no_op_without_a_published_database(predicted_db, tmp_path):
+    import plpredict.pipeline.run as pipeline
+
+    with db.connect(predicted_db) as conn:
+        assert pipeline.restore_prediction_history(conn, tmp_path / "absent.db") == 0
+
+
+def test_a_prediction_made_before_kickoff_is_not_flagged(predicted_db):
+    with db.connect(predicted_db) as conn:
+        data = queries.gameweek(conn, SEASON, 1)
+    # The fixture predicts each gameweek before it is played.
+    assert data["first_kickoff"] is not None
+    for match in data["matches"]:
+        assert match["predicted_at"] is not None
+
+
+def test_a_prediction_stored_after_kickoff_is_flagged(scratch_db):
+    """A late forecast must not be displayed as though it were live."""
+    with db.connect(scratch_db) as conn:
+        upcoming = next_unplayed_gameweek(conn, SEASON)
+        before = queries.gameweek(conn, SEASON, upcoming)
+        assert before["published_late"] is False
+
+        # Backdate the gameweek so its kick-off precedes the stored run.
+        conn.execute(
+            """
+            UPDATE matches SET match_date = '2000-01-01', kickoff = '15:00'
+            WHERE season = ? AND matchday = ? AND competition = 'premier_league'
+            """,
+            (SEASON, upcoming),
+        )
+        after = queries.gameweek(conn, SEASON, upcoming)
+
+    assert after["published_late"] is True
+    assert all(m["published_before_kickoff"] is False for m in after["matches"])

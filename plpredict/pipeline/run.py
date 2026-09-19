@@ -134,6 +134,54 @@ def published_fingerprint(season: str) -> tuple[int, int | None] | None:
         return data_fingerprint(conn, season)
 
 
+def restore_prediction_history(
+    conn: sqlite3.Connection, source: Path | str | None = None
+) -> int:
+    """Carry the recorded forecast history into a freshly built database.
+
+    The working database is a build artefact: it is rebuilt from source
+    on every run, and a CI runner starts without one at all. The
+    committed serving database is the durable record of what was
+    actually forecast, so it is what history is restored from.
+
+    Without this the scheduled job publishes a database containing only
+    the gameweek it just predicted and silently erases every prior
+    forecast — which destroys the one thing the history page exists to
+    show. Restoring is append-only: a gameweek that already has a
+    prediction of record keeps it, so a re-run can never rewrite what
+    was forecast at the time.
+    """
+    web_db = Path(source or config.WEB_DB_PATH)
+    if not web_db.is_file():
+        return 0
+
+    known_matches = {row[0] for row in conn.execute("SELECT match_id FROM matches")}
+    restored = 0
+    with db.connect(web_db, read_only=True) as published:
+        for run in published.execute("SELECT * FROM model_runs").fetchall():
+            conn.execute(
+                "INSERT OR IGNORE INTO model_runs VALUES (%s)"
+                % ", ".join("?" for _ in run.keys()),
+                tuple(run),
+            )
+        for table in ("predictions", "current_predictions"):
+            rows = [
+                tuple(row)
+                for row in published.execute(f"SELECT * FROM {table}")
+                # A restored row must point at a match this build knows
+                # about, or the foreign key would reject it.
+                if row["match_id"] in known_matches
+            ]
+            if not rows:
+                continue
+            placeholders = ", ".join("?" for _ in rows[0])
+            conn.executemany(
+                f"INSERT OR IGNORE INTO {table} VALUES ({placeholders})", rows
+            )
+            restored += len(rows)
+    return restored
+
+
 def train_and_predict(
     conn: sqlite3.Connection,
     features: pd.DataFrame,
@@ -308,6 +356,12 @@ def run(
     results: list[GameweekResult] = []
 
     with db.connect(db_path) as conn:
+        # Bring forward what has already been forecast, before deciding
+        # what still needs predicting.
+        carried = restore_prediction_history(conn)
+        if verbose and carried:
+            print(f"Restored {carried} stored predictions from the published database")
+
         matches = load_match_frame(conn)
 
         # Each target is tagged with whether it is history being filled

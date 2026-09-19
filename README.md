@@ -162,6 +162,20 @@ kick-off stays on the record exactly as made. Re-running a gameweek adds
 a run rather than editing one. The history page shows what was actually
 forecast, not what today's model would say with hindsight.
 
+The working database under `data/db/` is a build artefact and is not
+committed, so a scheduled run rebuilds it from source and predicts only
+the next gameweek. The committed serving database is therefore the
+durable record: the pipeline restores the published forecast history
+into the rebuilt database before predicting, which is what stops each
+run from publishing the current gameweek alone and erasing everything
+before it.
+
+A prediction stored after its gameweek has already kicked off is marked
+as such on the site. The model cannot cheat either way — features always
+come from the state before the first fixture — but a forecast published
+late is a weaker claim than one published in advance, and a reader
+cannot tell the difference from the numbers alone.
+
 ---
 
 ## Data sources
