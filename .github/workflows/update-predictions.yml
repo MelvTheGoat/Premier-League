@@ -4,6 +4,11 @@ name: Update predictions
 # away during an international break, or spread across four days. Rather
 # than guess a schedule, this runs every morning and stops immediately if
 # no new results have arrived since the database the site is serving.
+#
+# Every run then checks the deployed site, whether or not it published.
+# Pushing a commit and serving it are separate systems joined by a branch
+# name, so the job can succeed for weeks while the site sits still; the
+# only way to know the chain is intact is to look at the far end of it.
 on:
   schedule:
     - cron: "0 6 * * *"
@@ -79,6 +84,7 @@ jobs:
           PY
 
       - name: Commit and push
+        id: publish
         if: steps.pipeline.outputs.changed == 'true'
         run: |
           git config user.name "github-actions[bot]"
@@ -95,12 +101,67 @@ jobs:
           # rather than be resolved blindly.
           git pull --rebase origin "${GITHUB_REF_NAME}"
           git push origin "HEAD:${GITHUB_REF_NAME}"
+          echo "pushed=true" >> "$GITHUB_OUTPUT"
+
+      # A scheduled workflow only ever runs on the default branch, but the
+      # site is deployed from whichever branch the host was pointed at when
+      # the project was imported. Those were the same branch until the
+      # default was renamed, and then they were not: the job carried on
+      # pushing and going green while production went on serving a branch
+      # nothing was being pushed to any more.
+      #
+      # Rather than depend on two names staying in step, carry the new
+      # commit onto every other branch that can take it as a fast-forward.
+      # There is no --force anywhere here: a branch holding work of its own
+      # is rejected by the server and left exactly as it was. Set the
+      # repository variable SYNC_DEPLOY_BRANCHES to "false" to turn it off.
+      - name: Carry the update onto the other deployment branches
+        if: steps.publish.outputs.pushed == 'true' && vars.SYNC_DEPLOY_BRANCHES != 'false'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          branches=$(
+            curl -fsS \
+              -H "Authorization: Bearer ${GH_TOKEN}" \
+              -H "Accept: application/vnd.github+json" \
+              "${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/branches?per_page=100" \
+            | python3 -c 'import json,sys; print("\n".join(b["name"] for b in json.load(sys.stdin)))'
+          )
+          for branch in $branches; do
+            if [ "$branch" = "${GITHUB_REF_NAME}" ]; then
+              continue
+            fi
+            if git push origin "HEAD:refs/heads/${branch}" 2>/dev/null; then
+              echo "Advanced ${branch}."
+              echo "- advanced \`${branch}\`" >> "$GITHUB_STEP_SUMMARY"
+            else
+              echo "Left ${branch} alone; it carries commits of its own."
+              echo "- left \`${branch}\` alone (it carries commits of its own)" >> "$GITHUB_STEP_SUMMARY"
+            fi
+          done
+
+      # Runs whether or not anything was published. A run with nothing to
+      # do should still be serving a current forecast; if it is not, the
+      # job has quietly stopped working and needs to say so.
+      - name: Check every played gameweek has a prediction of record
+        id: published
+        run: python scripts/check_publication.py
+
+      # The end of the chain, and the only step that can see the failure
+      # the rest of this file is arranged around: everything upstream can
+      # be green while the deployed site is a fortnight out of date.
+      - name: Check the live site is serving it
+        env:
+          PLPRED_SITE_URL: ${{ vars.SITE_URL }}
+        run: |
+          python scripts/check_live_site.py \
+            --gameweek "${{ steps.published.outputs.gameweek }}"
 
       - name: Summary
         if: always()
         run: |
           if [ "${{ steps.pipeline.outputs.changed }}" = "true" ]; then
-            echo "Published new predictions." >> "$GITHUB_STEP_SUMMARY"
+            echo "Published gameweek ${{ steps.published.outputs.gameweek }}." >> "$GITHUB_STEP_SUMMARY"
           else
-            echo "No new results since the last run; nothing published." >> "$GITHUB_STEP_SUMMARY"
+            echo "No new results since the last run; gameweek ${{ steps.published.outputs.gameweek }} still current." >> "$GITHUB_STEP_SUMMARY"
           fi

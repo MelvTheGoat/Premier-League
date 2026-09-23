@@ -68,6 +68,13 @@ COMPETITION_FILES = {
 # Only the Premier League is modelled; the rest are context.
 TARGET_COMPETITION = "premier_league"
 
+# Where the published site is served from. The scheduled job fetches it
+# after pushing, to confirm the deployment actually picked the change up
+# rather than trusting that a green push means a current site. An unset
+# repository variable reaches a workflow as an empty string rather than
+# as nothing at all, so fall back on emptiness too.
+SITE_URL = os.environ.get("PLPRED_SITE_URL") or "https://premier-league-black.vercel.app"
+
 
 @dataclass(frozen=True)
 class FeatureConfig:

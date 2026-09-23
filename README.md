@@ -334,6 +334,38 @@ publishes even when no new results have arrived.
 The workflow needs no secrets — the built-in `GITHUB_TOKEN` is enough,
 with `contents: write` to push.
 
+#### Why the job does not trust its own success
+
+A scheduled workflow only ever runs on the repository's default branch,
+but the site is deployed from whichever branch the host was pointed at.
+Those were the same branch here until the default was renamed, and then
+they were not: the job carried on pushing and reporting success while
+production went on serving a branch that no longer received anything.
+Eleven consecutive green runs, and a site stuck two gameweeks back.
+
+Nothing inside the repository could have caught that, because from the
+inside everything was working. So two things changed.
+
+The job no longer depends on the two branch names staying in step. After
+pushing to the branch it ran on, it carries the same commit onto every
+other branch that can take it as a **fast-forward**. There is no
+`--force` anywhere: a branch holding commits of its own is rejected by
+the server and left untouched, so only branches that are strictly behind
+— which is what a stale deployment branch is — move. Set the repository
+variable `SYNC_DEPLOY_BRANCHES` to `false` to switch this off.
+
+And every run, including one with nothing to publish, ends by asking the
+site itself. `scripts/check_publication.py` confirms that every gameweek
+already played has a prediction of record and that the gameweek about to
+be played has been forecast; `scripts/check_live_site.py` then fetches
+the deployed page and fails the job unless it is showing that gameweek,
+polling for a few minutes because deployments are not instant. A failing
+scheduled workflow emails the repository owner, which is the point:
+silence should mean healthy.
+
+Point the check at a different URL with the repository variable
+`SITE_URL`, or `PLPRED_SITE_URL` when running it locally.
+
 ---
 
 ## Deploying the site
@@ -397,6 +429,12 @@ working database, which is what happens during local development.
 
 # Work offline against the archives already in data/raw/
 .venv/bin/python scripts/run_pipeline.py --offline
+
+# Is the serving database still forecasting every gameweek?
+.venv/bin/python scripts/check_publication.py
+
+# Is the deployed site actually showing it?
+.venv/bin/python scripts/check_live_site.py --gameweek 6
 
 # Tests
 .venv/bin/python -m pytest tests/
