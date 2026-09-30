@@ -187,6 +187,7 @@ cannot tell the difference from the numbers alone.
 | FIFA / EA FC player ratings | Squad-quality proxy | Not vendored; build from any dump you have, see below | Depends on which dumps you supply |
 | `data/manual/managers.csv` | Manager tenure and change features | Hand-maintained | 2025-26 onward |
 | `data/manual/unavailability.csv` | Injuries, suspensions, international duty | Hand-maintained | Empty by default |
+| [FPL API](https://fantasy.premierleague.com/api/bootstrap-static/) → `data/snapshots/fpl_availability.csv` | Player status, chance of playing, injury news | Public JSON, no key. Recorded daily, **changes only** | Recorded from 30 September 2026. Not yet a model feature — see below |
 | `data/manual/european_participation.csv` | Midweek European commitments | Hand-maintained | 2026-27 |
 | `data/manual/team_aliases.csv` | Club-name normalisation across sources | Hand-maintained | All sources |
 | Derived from results | League table, form, congestion, head-to-head, Elo | — | Complete |
@@ -266,6 +267,37 @@ single highest-value manual addition.
 
 **`european_participation.csv`** — which clubs carry a midweek European
 commitment, one row per club per season. Changes once a year.
+
+### Recorded data: player availability
+
+The Fantasy Premier League API publishes every player's availability —
+status (available, doubtful, injured, suspended, unavailable), percentage
+chance of playing, and the news line behind it — but **only as it stands
+now**. There is no archive. Once a player recovers, the record that he
+was ever doubtful is gone, and for a model that must only learn from what
+was known before kick-off, that is precisely the part that matters.
+
+So the daily job writes it down. `scripts/snapshot_fpl.py` fetches the
+current picture and appends to `data/snapshots/fpl_availability.csv`
+only what has changed since the last observation: a status moving, a
+percentage changing, a new news line, a transfer. A club re-dating an
+unchanged news line is not a change. Each season opens with one full
+observation of every player, so availability as it stood at any moment
+is the last row per player at or before that moment
+(`fpl.latest_status(rows, season, as_of=...)`).
+
+This runs every day whether or not there are new results, and the log is
+committed rather than rebuilt, because it is the one input that cannot be
+regenerated from source. If the API cannot be read, predictions still
+publish but the run fails at the end, since that day's gap is permanent.
+
+It is **not yet a model feature**. A column populated from September 2026
+onward has no training history behind it, and the feature layer already
+excludes any column without enough coverage in the training window, so
+wiring it in now would change nothing. The plan is to pair it with a
+proxy that *can* be computed back to 2016-17 from the per-gameweek
+minutes archive, which the model can train on today, and let the direct
+signal take over as the log accumulates.
 
 ---
 
@@ -476,6 +508,7 @@ plpredict/
     sources/openfootball.py    results and fixtures (the primary source)
     sources/footballdata.py    match statistics (optional enrichment)
     sources/fifa_ratings.py    squad-quality aggregation
+    sources/fpl.py             player availability, recorded daily
     teams.py                   club-name normalisation
     ingest.py                  everything above → database
 
@@ -497,6 +530,7 @@ api/index.py                 serverless entrypoint (Vercel)
 vercel.json                  deployment config
 scripts/                     thin CLI wrappers
 data/manual/                 hand-maintained context (versioned)
+data/snapshots/              recorded history that no source keeps (versioned)
 data/web/                    the committed serving database
 tests/
 ```
@@ -569,9 +603,10 @@ gains still on the table are listed below, in the order likely to pay.
 
 ## Known limitations
 
-- **Injuries are not automated.** `unavailability.csv` ships empty. This
-  is the largest gap: team news is genuinely hard to scrape reliably and
-  is the single most valuable thing to add.
+- **Injuries do not reach the model yet.** Player availability has been
+  recorded daily from the FPL API since 30 September 2026, but a column
+  with a few weeks of history cannot be trained on, so it is collected
+  and not yet used. This remains the largest gap in the model.
 - **Manager history starts at 2025-26.** The features are wired in and
   correct, but the model has roughly two seasons of matches to learn the
   effect from. Extending the file backwards is cheap and helps directly.

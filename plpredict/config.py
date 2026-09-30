@@ -57,6 +57,16 @@ FOOTBALLDATA_REPO = os.environ.get(
 )
 FOOTBALLDATA_CHECKOUT = _path("PLPRED_FOOTBALLDATA_DIR", RAW_DIR / "football-datasets")
 
+# Player availability from the Fantasy Premier League API, which reports
+# only the present. The log is how a history accumulates at all, so it is
+# committed alongside the code rather than rebuilt like everything else.
+FPL_BOOTSTRAP_URL = os.environ.get(
+    "PLPRED_FPL_URL", "https://fantasy.premierleague.com/api/bootstrap-static/"
+)
+FPL_AVAILABILITY_LOG = _path(
+    "PLPRED_FPL_LOG", DATA_DIR / "snapshots" / "fpl_availability.csv"
+)
+
 COMPETITION_FILES = {
     "premier_league": "1-premierleague.txt",
     "championship": "2-championship.txt",

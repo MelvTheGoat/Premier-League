@@ -83,18 +83,36 @@ jobs:
           print("smoke check passed")
           PY
 
+      # The FPL API reports player availability only as it stands now, so
+      # this runs every day whether or not there are new results: a day
+      # not written down is a day that can never be recovered. A failure
+      # here must not hold back a gameweek's predictions, so the run is
+      # allowed to carry on and is failed at the end instead.
+      - name: Record player availability
+        id: fpl
+        continue-on-error: true
+        run: python scripts/snapshot_fpl.py
+
       - name: Commit and push
         id: publish
-        if: steps.pipeline.outputs.changed == 'true'
+        if: steps.pipeline.outputs.changed == 'true' || (steps.fpl.outputs.recorded || '0') != '0'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/web/plpredict-web.db
+          git add data/web/plpredict-web.db data/snapshots/fpl_availability.csv
           if git diff --staged --quiet; then
-            echo "Serving database is byte-identical; nothing to commit."
+            echo "Nothing differs from what is committed; nothing to push."
             exit 0
           fi
-          git commit -m "Update predictions through $(date -u +'%Y-%m-%d')"
+          today=$(date -u +'%Y-%m-%d')
+          if git diff --staged --quiet -- data/web/plpredict-web.db; then
+            message="Record player availability for ${today}"
+          elif git diff --staged --quiet -- data/snapshots/fpl_availability.csv; then
+            message="Update predictions through ${today}"
+          else
+            message="Update predictions and player availability through ${today}"
+          fi
+          git commit -m "${message}"
           # Pick up anything pushed by hand since the job started. The job
           # only ever touches the serving database, so this rebases cleanly
           # against code changes; a genuine conflict should fail loudly
@@ -165,3 +183,14 @@ jobs:
           else
             echo "No new results since the last run; gameweek ${{ steps.published.outputs.gameweek }} still current." >> "$GITHUB_STEP_SUMMARY"
           fi
+          if [ "${{ steps.fpl.outcome }}" = "success" ]; then
+            echo "Player availability: ${{ steps.fpl.outputs.recorded }} changes recorded." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "Player availability: **not recorded** (see the Record player availability step)." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Fail the run if availability went unrecorded
+        if: steps.fpl.outcome == 'failure'
+        run: |
+          echo "::error::The FPL API could not be read, so today's player availability is missing from the log for good."
+          exit 1
