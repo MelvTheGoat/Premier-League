@@ -13,6 +13,7 @@ import sqlite3
 from typing import Any
 
 from plpredict import config, db
+from plpredict.data import gameweeks
 from plpredict.data.teams import display_name
 
 _OUTCOME_LABELS = {"H": "Home win", "D": "Draw", "A": "Away win"}
@@ -77,11 +78,20 @@ def _row_to_match(row: sqlite3.Row, first_kickoff: dt.datetime | None = None) ->
         "run_id": row["run_id"],
         "predicted_at": row["predicted_at"],
         "published_before_kickoff": _published_before_kickoff(row, first_kickoff),
+        # A fixture played outside the round it was scheduled in: the
+        # other half of a club's double gameweek.
+        "rearranged_from": (
+            row["original_matchday"]
+            if row["original_matchday"] is not None
+            and row["original_matchday"] != row["matchday"]
+            else None
+        ),
     }
 
 
 _GAMEWEEK_QUERY = """
-    SELECT m.match_id, m.match_date, m.kickoff, m.home_team, m.away_team,
+    SELECT m.match_id, m.matchday, m.original_matchday,
+           m.match_date, m.kickoff, m.home_team, m.away_team,
            m.home_goals, m.away_goals, m.result,
            p.predicted_outcome, p.p_home, p.p_draw, p.p_away,
            p.pred_home_goals, p.pred_away_goals,
@@ -212,15 +222,9 @@ def season_gameweeks(conn: sqlite3.Connection, season: str) -> list[dict[str, An
 
 def current_matchday(conn: sqlite3.Connection, season: str) -> int:
     """The gameweek the site should open on: the next one still to be played."""
-    row = conn.execute(
-        """
-        SELECT MIN(matchday) FROM matches
-        WHERE season = ? AND competition = ? AND status != 'played'
-        """,
-        (season, config.TARGET_COMPETITION),
-    ).fetchone()
-    if row and row[0] is not None:
-        return int(row[0])
+    upcoming = gameweeks.next_to_play(conn, season, config.TARGET_COMPETITION)
+    if upcoming is not None:
+        return upcoming
     row = conn.execute(
         """
         SELECT MAX(matchday) FROM matches WHERE season = ? AND competition = ?

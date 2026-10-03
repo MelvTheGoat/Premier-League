@@ -37,7 +37,7 @@ from plpredict.features.state import HeadToHead, LeagueTable, MatchOutcome, Team
 
 # Bumped whenever the meaning of a column changes, so stale rows are
 # never silently mixed with fresh ones.
-FEATURE_VERSION = "2026.09.1"
+FEATURE_VERSION = "2026.10.1"
 
 _LEAGUE_COMPETITIONS = {"premier_league", "championship", "league_one"}
 _EUROPEAN_TIERS = {
@@ -341,14 +341,34 @@ class FeatureBuilder:
                 return date
         return None
 
-    def _congestion(self, team: str, date: dt.date, season: str) -> dict[str, float | None]:
+    def _congestion(
+        self, team: str, date: dt.date, season: str, gameweek_dates: list[dt.date]
+    ) -> dict[str, float | None]:
+        """Rest, fixture density, and how many games the club has this gameweek.
+
+        In a double gameweek a club's second match is featurised before
+        its first has been played, like everything else in the gameweek,
+        so the rolling state cannot see the first one yet. It is on the
+        published fixture list, though, which is all that rest days and
+        match counts need - so the earlier fixture is counted from there.
+        """
         state = self.states[team]
         next_date = self._next_match_date(team, date)
         european = self.european.get((season, team))
+        earlier = [day for day in gameweek_dates if day < date]
+        previous = [state.match_dates[-1]] if state.match_dates else []
+        last = max([*previous, *earlier], default=None)
+        cap = self.settings.max_rest_days
+
+        def within(days: int) -> float:
+            since = date - dt.timedelta(days=days)
+            return float(state.matches_within(date, days) + sum(1 for day in earlier if day >= since))
+
         return {
-            "rest_days": state.days_since_last_match(date, self.settings.max_rest_days),
-            "matches_last_14d": float(state.matches_within(date, 14)),
-            "matches_last_21d": float(state.matches_within(date, 21)),
+            "rest_days": min((date - last).days, cap) if last else None,
+            "matches_last_14d": within(14),
+            "matches_last_21d": within(21),
+            "gameweek_fixtures": float(len(gameweek_dates)),
             "days_to_next_match": (
                 min((next_date - date).days, self.settings.max_rest_days)
                 if next_date
@@ -495,6 +515,7 @@ class FeatureBuilder:
         size: int,
         *,
         is_home: bool,
+        gameweek_dates: list[dt.date],
     ) -> dict[str, float | None]:
         state = self.states[team]
         block: dict[str, float | None] = {"elo": self.elo.rating(team, config.TARGET_COMPETITION)}
@@ -543,7 +564,7 @@ class FeatureBuilder:
         )
 
         block.update(self._table_context(table, team, size))
-        block.update(self._congestion(team, date, season))
+        block.update(self._congestion(team, date, season, gameweek_dates))
         block.update(self._manager(team, date))
         block.update(self._squad(team, season))
         block.update(self._availability(season, matchday, team))
@@ -569,8 +590,14 @@ class FeatureBuilder:
             season = group[0].season
             members = self.league_members[season]
             table = LeagueTable(self.states).snapshot(members)
+            # Every club's fixtures in this gameweek: two for a club with a
+            # rearranged match falling in it, none for one whose moved out.
+            gameweek_dates: dict[str, list[dt.date]] = defaultdict(list)
             for match in group:
-                rows.append(self._featurise(match, table, len(members)))
+                gameweek_dates[match.home_team].append(match.match_date)
+                gameweek_dates[match.away_team].append(match.match_date)
+            for match in group:
+                rows.append(self._featurise(match, table, len(members), gameweek_dates))
             for match in group:
                 _apply_result(match, self.states, self.elo, self.head_to_head)
 
@@ -584,14 +611,20 @@ class FeatureBuilder:
                 self.states[team].roll_season(match.season, match.competition)
 
     def _featurise(
-        self, match: MatchRow, table: dict[str, dict[str, float]], size: int
+        self,
+        match: MatchRow,
+        table: dict[str, dict[str, float]],
+        size: int,
+        gameweek_dates: dict[str, list[dt.date]],
     ) -> dict[str, Any]:
         date = match.match_date
         home = self._team_block(
-            match.home_team, match.season, match.matchday, date, table, size, is_home=True
+            match.home_team, match.season, match.matchday, date, table, size,
+            is_home=True, gameweek_dates=gameweek_dates[match.home_team],
         )
         away = self._team_block(
-            match.away_team, match.season, match.matchday, date, table, size, is_home=False
+            match.away_team, match.season, match.matchday, date, table, size,
+            is_home=False, gameweek_dates=gameweek_dates[match.away_team],
         )
 
         row: dict[str, Any] = {

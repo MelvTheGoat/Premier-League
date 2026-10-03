@@ -25,6 +25,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from plpredict import config  # noqa: E402
+from plpredict.data import gameweeks  # noqa: E402
 from plpredict.web import queries  # noqa: E402
 
 
@@ -58,18 +59,6 @@ def _started_gameweeks(conn: sqlite3.Connection, season: str) -> set[int]:
     return {int(row[0]) for row in rows}
 
 
-def _next_unplayed_gameweek(conn: sqlite3.Connection, season: str) -> int | None:
-    row = conn.execute(
-        """
-        SELECT MIN(matchday) FROM matches
-        WHERE season = ? AND competition = ? AND status != 'played'
-          AND matchday IS NOT NULL
-        """,
-        (season, config.TARGET_COMPETITION),
-    ).fetchone()
-    return int(row[0]) if row and row[0] is not None else None
-
-
 def check(db_path: Path, season: str) -> tuple[list[str], int | None]:
     """The reasons the published database is unfit, and the gameweek it leads with."""
     if not db_path.is_file():
@@ -81,7 +70,7 @@ def check(db_path: Path, season: str) -> tuple[list[str], int | None]:
     try:
         predicted = _predicted_gameweeks(conn, season)
         started = _started_gameweeks(conn, season)
-        upcoming = _next_unplayed_gameweek(conn, season)
+        upcoming = gameweeks.next_to_play(conn, season, config.TARGET_COMPETITION)
 
         missing = sorted(started - predicted)
         if missing:

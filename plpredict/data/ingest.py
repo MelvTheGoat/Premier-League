@@ -11,10 +11,12 @@ import csv
 import datetime as dt
 import hashlib
 import sqlite3
+from collections import defaultdict
 from dataclasses import dataclass
 from pathlib import Path
 
 from plpredict import config, db
+from plpredict.data import gameweeks
 from plpredict.data.sources import openfootball
 from plpredict.data.sources.openfootball import RawMatch
 from plpredict.data.teams import canonical_name
@@ -104,6 +106,35 @@ def _seasons_to_load(checkout: Path, first_season: str, last_season: str) -> lis
     ]
 
 
+def _assign_gameweeks(rows: list[dict]) -> None:
+    """Number league matches by the gameweek they are played in.
+
+    The source's round number is kept as ``original_matchday`` — it is
+    also what the match id is built from, so identities never change
+    when a fixture moves — and ``matchday`` becomes the gameweek the
+    match actually falls in. See ``plpredict.data.gameweeks``.
+    """
+    by_season: dict[str, list[gameweeks.Fixture]] = defaultdict(list)
+    for row in rows:
+        row["original_matchday"] = row["matchday"]
+        if (
+            row["competition"] == config.TARGET_COMPETITION
+            and row["matchday"] is not None
+            and row["match_date"]
+        ):
+            by_season[row["season"]].append(
+                gameweeks.Fixture(
+                    row["match_id"], row["matchday"], dt.date.fromisoformat(row["match_date"])
+                )
+            )
+    assigned: dict[str, int] = {}
+    for fixtures in by_season.values():
+        assigned.update(gameweeks.assign(fixtures))
+    for row in rows:
+        if row["match_id"] in assigned:
+            row["matchday"] = assigned[row["match_id"]]
+
+
 def ingest_matches(
     conn: sqlite3.Connection,
     checkout: Path,
@@ -120,6 +151,7 @@ def ingest_matches(
     for row in rows:
         deduped[row["match_id"]] = row
     rows = list(deduped.values())
+    _assign_gameweeks(rows)
 
     db.upsert_many(conn, "matches", rows, ("match_id",))
     played = sum(1 for r in rows if r["status"] == "played")
@@ -146,10 +178,39 @@ def _read_csv(path: Path) -> list[dict]:
 
 
 def ingest_managers(conn: sqlite3.Connection) -> int:
-    rows = []
+    """Managerial spells: Wikidata first, the hand-kept file for the gaps.
+
+    Wikidata's record is exact to the day and maintained by others, so it
+    is the source of truth. A hand-kept spell is used only where it starts
+    on a date no Wikidata spell for that club covers - which is where it
+    adds something - so an out-of-date manual row can never overrule a
+    correct one. The table is rebuilt from both on every run, so a spell
+    Wikidata corrects is corrected here too.
+    """
+    from plpredict.data.sources import wikidata_managers
+
+    rows = [
+        {
+            "team": spell.team,
+            "manager": spell.manager,
+            "start_date": spell.start_date,
+            "end_date": spell.end_date,
+            "source": "wikidata",
+        }
+        for spell in wikidata_managers.read(config.WIKIDATA_MANAGERS_FILE)
+    ]
+
+    def covered(team: str, date: str) -> bool:
+        return any(
+            row["team"] == team
+            and row["start_date"] <= date
+            and (row["end_date"] is None or date <= row["end_date"])
+            for row in rows
+        )
+
     for row in _read_csv(config.MANUAL_DIR / "managers.csv"):
         team = canonical_name(row.get("team", ""))
-        if not team or not row.get("start_date"):
+        if not team or not row.get("start_date") or covered(team, row["start_date"]):
             continue
         rows.append(
             {
@@ -160,6 +221,8 @@ def ingest_managers(conn: sqlite3.Connection) -> int:
                 "source": row.get("source") or "manual",
             }
         )
+
+    conn.execute("DELETE FROM managers")
     return db.upsert_many(conn, "managers", rows, ("team", "start_date"))
 
 

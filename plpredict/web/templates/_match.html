@@ -15,6 +15,9 @@
   <div class="match-when">
     <span class="date">{{ match.date | pretty_date }}</span>
     <span class="time">{{ match.kickoff or '' }}</span>
+    {% if match.rearranged_from %}
+      <span class="moved" title="Scheduled for gameweek {{ match.rearranged_from }}, played in this one">Rearranged from GW{{ match.rearranged_from }}</span>
+    {% endif %}
   </div>
 
   <div class="match-teams">

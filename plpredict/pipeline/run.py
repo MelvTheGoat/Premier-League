@@ -25,7 +25,7 @@ from typing import Any
 import pandas as pd
 
 from plpredict import config, db
-from plpredict.data import ingest
+from plpredict.data import gameweeks, ingest
 from plpredict.features.build import (
     FEATURE_VERSION,
     build_features,
@@ -83,15 +83,8 @@ def gameweek_cutoff(features: pd.DataFrame, season: str, matchday: int) -> dt.da
 
 
 def next_unplayed_gameweek(conn: sqlite3.Connection, season: str) -> int | None:
-    """The lowest gameweek in a season that still has a fixture to play."""
-    row = conn.execute(
-        """
-        SELECT MIN(matchday) FROM matches
-        WHERE season = ? AND competition = ? AND status != 'played'
-        """,
-        (season, config.TARGET_COMPETITION),
-    ).fetchone()
-    return int(row[0]) if row and row[0] is not None else None
+    """The gameweek about to be played; postponed stragglers do not count."""
+    return gameweeks.next_to_play(conn, season, config.TARGET_COMPETITION)
 
 
 def last_completed_gameweek(conn: sqlite3.Connection, season: str) -> int | None:

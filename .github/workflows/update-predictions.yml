@@ -43,6 +43,12 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements-pipeline.txt
 
+      # Before the pipeline, so an appointment recorded overnight reaches
+      # today's features. A failed fetch keeps the committed file.
+      - name: Refresh manager history from Wikidata
+        id: managers
+        run: python scripts/sync_managers.py
+
       - name: Ingest results, retrain and predict the next gameweek
         id: pipeline
         env:
@@ -93,24 +99,41 @@ jobs:
         continue-on-error: true
         run: python scripts/snapshot_fpl.py
 
+      # Headlines are a tripwire, not a source: a change reported in the
+      # news that Wikidata has not caught up with is noted in the summary.
+      - name: Check the news for managerial changes
+        continue-on-error: true
+        run: python scripts/check_manager_news.py
+
       - name: Commit and push
         id: publish
-        if: steps.pipeline.outputs.changed == 'true' || (steps.fpl.outputs.recorded || '0') != '0'
+        if: >-
+          steps.pipeline.outputs.changed == 'true'
+          || (steps.fpl.outputs.recorded || '0') != '0'
+          || steps.managers.outputs.managers_changed == 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/web/plpredict-web.db data/snapshots/fpl_availability.csv
+          git add data/web/plpredict-web.db data/snapshots/fpl_availability.csv \
+                  data/external/managers_wikidata.csv
           if git diff --staged --quiet; then
             echo "Nothing differs from what is committed; nothing to push."
             exit 0
           fi
           today=$(date -u +'%Y-%m-%d')
-          if git diff --staged --quiet -- data/web/plpredict-web.db; then
+          changed=()
+          git diff --staged --quiet -- data/web/plpredict-web.db || changed+=("predictions")
+          git diff --staged --quiet -- data/snapshots/fpl_availability.csv || changed+=("player availability")
+          git diff --staged --quiet -- data/external/managers_wikidata.csv || changed+=("manager history")
+          case ${#changed[@]} in
+            1) what="${changed[0]}" ;;
+            2) what="${changed[0]} and ${changed[1]}" ;;
+            *) what="${changed[0]}, ${changed[1]} and ${changed[2]}" ;;
+          esac
+          if [ "${changed[*]}" = "player availability" ]; then
             message="Record player availability for ${today}"
-          elif git diff --staged --quiet -- data/snapshots/fpl_availability.csv; then
-            message="Update predictions through ${today}"
           else
-            message="Update predictions and player availability through ${today}"
+            message="Update ${what} through ${today}"
           fi
           git commit -m "${message}"
           # Pick up anything pushed by hand since the job started. The job

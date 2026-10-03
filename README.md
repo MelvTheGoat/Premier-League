@@ -43,7 +43,7 @@ it will ignore them. That is the point.
 
 ## What is in the feature table
 
-204 columns, built for every match in one strictly chronological pass.
+216 columns, built for every match in one strictly chronological pass.
 Each family below is computed for the home side, the away side, and as
 the difference between them.
 
@@ -52,7 +52,7 @@ the difference between them.
 | **Strength** | Cross-competition Elo, Elo-implied win expectation | The only strength measure that survives promotion — see below |
 | **Rolling form** | Points, goals for/against, goal difference, win and clean-sheet rate, shots and shots on target, and the average Elo of the opposition faced, over the last 4, 6 and 10 matches | A club's last six games predict the next one better than its season average |
 | **Table context** | Position, points, points per game, matches played, and the points gap to first, to the top four, to the top six, and above the relegation zone | Position alone is weak; distance to what a club is chasing or fearing is the thing that changes how it plays |
-| **Congestion** | Days of rest, matches in the last 14 and 21 days, days until the next fixture, midweek kick-off flag, European competition tier | Rotation risk, without needing a team sheet |
+| **Congestion** | Days of rest, matches in the last 14 and 21 days, days until the next fixture, fixtures in this gameweek (two in a double gameweek), midweek kick-off flag, European competition tier | Rotation risk, without needing a team sheet |
 | **Manager** | Days and matches under the current manager, a new-manager flag, and points per game under the current manager minus the previous one | The best available proxies for a managerial change |
 | **Availability** | First-team players out, key players out | Missing regulars change a side's strength in a way results-based features cannot see |
 | **Squad quality** | FIFA / EA FC squad rating standardised within season, attack and defence unit ratings, and the age of the rating in seasons | Quality on paper, which the table has not caught up with for a newly promoted or newly rebuilt side |
@@ -184,8 +184,11 @@ cannot tell the difference from the numbers alone.
 | --- | --- | --- | --- |
 | [openfootball/england](https://github.com/openfootball/england) | Results, fixtures, gameweek numbers, kick-off dates for the Premier League, Championship, League One, FA Cup and EFL Cup | Public git repo, no key. Cloned once, then `git pull` | 2000-01 to date, updated within a day or two of each round |
 | [datasets/football-datasets](https://github.com/datasets/football-datasets) | Shots, shots on target, corners, fouls, cards, referee | Public git repo, no key | 1993-94 onward, **lags the live season** — see below |
+| [Wikidata](https://www.wikidata.org) → `data/external/managers_wikidata.csv` | Managerial spells: who, from when, until when | Public SPARQL endpoint, one query, no key. Refreshed daily | Every club since 2010-11; 98–100% of matches from 2018-19, 57–68% before 2016 |
+| [BBC Sport feed](https://feeds.bbci.co.uk/sport/football/premier-league/rss.xml) | A tripwire for manager changes Wikidata has not caught up with | Public RSS | Advisory only — never written to the record |
 | FIFA / EA FC player ratings | Squad-quality proxy | Not vendored; build from any dump you have, see below | Depends on which dumps you supply |
-| `data/manual/managers.csv` | Manager tenure and change features | Hand-maintained | 2025-26 onward |
+| `data/manual/managers.csv` | Manager spells Wikidata does not cover | Hand-maintained; fills gaps only | 2025-26 onward |
+| `data/manual/team_wikidata.csv` | Each club's Wikidata item | Hand-checked | Every club since 2010-11 |
 | `data/manual/unavailability.csv` | Injuries, suspensions, international duty | Hand-maintained | Empty by default |
 | [FPL API](https://fantasy.premierleague.com/api/bootstrap-static/) → `data/snapshots/fpl_availability.csv` | Player status, chance of playing, injury news | Public JSON, no key. Recorded daily, **changes only** | Recorded from 30 September 2026. Not yet a model feature — see below |
 | `data/manual/european_participation.csv` | Midweek European commitments | Hand-maintained | 2026-27 |
@@ -194,7 +197,9 @@ cannot tell the difference from the numbers alone.
 
 Everything the pipeline needs to predict the current gameweek comes from
 openfootball, which is free and current. The rest improve the model
-where they are available.
+where they are available: each is an enrichment, and if one cannot be
+reached on a given day the pipeline carries on without it and the
+feature layer drops the columns it would have fed for that run.
 
 ### Handling sources that lag the live season
 
@@ -249,14 +254,18 @@ Three files under `data/manual/` are meant to be edited by hand. They
 carry their own documentation in comment lines at the top, and `#` lines
 are ignored on load.
 
-**`managers.csv`** — one row per managerial spell. Covers 2025-26
-onward; the exact day is unknown for some appointments and those rows are
-marked `manual:approx` in the `source` column, which does not
-meaningfully affect a "matches under this manager" feature. **Adding
-older spells directly improves what the model can learn about managerial
-changes** — with the current coverage the effect is estimated from about
-two seasons of matches, so the features exist and are wired in but the
-evidence behind them is thin.
+**`managers.csv`** — managerial spells that Wikidata does not cover.
+Manager history now comes from Wikidata (see below), which is exact to
+the day and maintained by others. A row here is used only where it
+starts on a date no Wikidata spell for that club covers, so this file
+fills gaps and can never overrule the fuller record. When the two
+disagreed, Wikidata was right: this file had Frank Lampard joining
+Coventry a year early.
+
+**`team_wikidata.csv`** — each club's Wikidata item. Several items can
+share a club's name (a women's side, a namesake abroad), so the mapping
+is pinned and checked rather than looked up each time. A newly promoted
+club missing from it is resolved by name at sync time and reported.
 
 **`unavailability.csv`** — key-player availability, one row per club per
 gameweek. This is the hardest input to automate reliably and ships
@@ -294,10 +303,79 @@ publish but the run fails at the end, since that day's gap is permanent.
 It is **not yet a model feature**. A column populated from September 2026
 onward has no training history behind it, and the feature layer already
 excludes any column without enough coverage in the training window, so
-wiring it in now would change nothing. The plan is to pair it with a
-proxy that *can* be computed back to 2016-17 from the per-gameweek
-minutes archive, which the model can train on today, and let the direct
-signal take over as the log accumulates.
+wiring it in now would change nothing. A proxy that *could* be computed
+back to 2016-17 was built and tested, and did not help — see "Tried and
+dropped" below — so this log is the route to injury information in the
+model, once there is enough of it to learn from.
+
+### Rearranged fixtures and double gameweeks
+
+The fixture list numbers a match by the round it was *scheduled* in and
+keeps that number when the match is moved. A matchday-8 fixture played
+the following April is still "matchday 8" in the source, which was wrong
+for everything this project uses a gameweek for:
+
+- Features for a gameweek are computed from the state before its first
+  kick-off and its results are fed in afterwards. The April result was
+  being fed into every team's form, table and Elo from September onward
+  — a result from the future, visible to seven months of training rows.
+  Across the archive, **258 results** reached the features before they
+  had been played, the worst by 185 days.
+- "The next gameweek" was the lowest round with a match still to play,
+  so a single postponement would have pinned the site to that round
+  until it was rearranged, and nothing after it would have been forecast
+  in time.
+
+`plpredict/data/gameweeks.py` assigns every match to the gameweek it is
+actually **played** in, which is what fantasy players know as double and
+blank gameweeks. Each round's core is the cluster of dates on which most
+of its matches were played; the cores, in date order, cut the season
+into consecutive windows; every match belongs to the window its date
+falls in. 190 matches since 2010 move, and the 258 leaks fall to 6, none
+more than four days. The source's round is kept as `original_matchday`,
+which is also what the match id is built from, so stored predictions
+never lose their match when a fixture moves.
+
+A match still unplayed while later fixtures have results counts as
+postponed and no longer holds up "the next gameweek"; once it is given a
+new date it moves to that gameweek and is predicted with it. The site
+marks it *Rearranged from GW8*. A club with two fixtures in a gameweek
+gets features for both — `gameweek_fixtures`, and rest days that count
+the first match when featurising the second, from the published
+fixture list rather than from results.
+
+### Manager history from Wikidata
+
+The manager features need every club's spells, with dates, back through
+the training window. Wikidata records them from two directions — a
+club's *head coach* statements and a manager's *coach of sports team*
+statements — and each is often missing where the other is present, so
+`plpredict/data/sources/wikidata_managers.py` reads both in one query.
+Three things are cleaned on the way in:
+
+- *Coach of sports team* covers the whole staff. A statement naming any
+  role other than being in charge (assistant coach, goalkeeping coach) is
+  dropped; without this, Jürgen Klopp's assistant appeared to have run
+  Liverpool for nine years.
+- A date known only to the year is stored as 1 January. Beside an exact
+  record of the same appointment it would invent a spell six months
+  early, so it is dropped where an exact one exists.
+- An open-ended spell followed by another manager's is closed the day
+  before the next begins.
+
+That covers 84% of club-matches since 2010-11 — 98–100% from 2018-19,
+57–68% before 2016 — against roughly the last season and a half from the
+hand-kept file. `scripts/sync_managers.py` refreshes it every morning,
+before the pipeline runs, so an appointment recorded overnight reaches
+that day's features.
+
+News is used as you might use a colleague who reads the papers:
+`scripts/check_manager_news.py` scans BBC Sport's Premier League
+headlines for a managerial change at a current club, and if one appears
+and Wikidata still shows the same manager three days later, the run says
+so in its summary. Headlines are never written into the record. They are
+too loose for that — "appointed" is as likely to be about a sporting
+director, and a manager under pressure reads much like one sacked.
 
 ---
 
@@ -353,6 +431,15 @@ how many matches have been played this season, and which gameweek is
 next — against the database the site is currently serving. If they
 match, the run stops there: no retrain, no commit, no redeploy. A quiet
 day costs about a minute of CI and changes nothing.
+
+Around the pipeline the job also keeps three inputs current. Before it
+runs, `scripts/sync_managers.py` refreshes manager history from Wikidata
+(a failed fetch keeps the committed file; nothing is lost by a missed
+day). After it, the player
+availability log is recorded and the news is checked for managerial
+changes Wikidata has not caught up with. Anything that changed — the
+serving database, the availability log, the manager file — goes out in
+one commit.
 
 Before anything is committed the workflow serves the freshly exported
 database and checks that the pages render. A published database the site
@@ -509,7 +596,10 @@ plpredict/
     sources/footballdata.py    match statistics (optional enrichment)
     sources/fifa_ratings.py    squad-quality aggregation
     sources/fpl.py             player availability, recorded daily
+    sources/wikidata_managers.py  managerial spells
+    sources/manager_news.py    headline tripwire for manager changes
     teams.py                   club-name normalisation
+    gameweeks.py               the gameweek each match is played in
     ingest.py                  everything above → database
 
   features/                  ── FEATURE ENGINEERING
@@ -530,6 +620,7 @@ api/index.py                 serverless entrypoint (Vercel)
 vercel.json                  deployment config
 scripts/                     thin CLI wrappers
 data/manual/                 hand-maintained context (versioned)
+data/external/               built or synced inputs: squad ratings, managers (versioned)
 data/snapshots/              recorded history that no source keeps (versioned)
 data/web/                    the committed serving database
 tests/
@@ -601,18 +692,56 @@ backing the home side, and a log loss meaningfully below a tuned Elo
 baseline is a reasonable place for a model of this kind to sit. The
 gains still on the table are listed below, in the order likely to pay.
 
+### Tested and not shipped
+
+In October 2026 four additions were built and each was judged the same
+way: the full walk-forward backtest over 2019-20 to 2025-26 (2,660
+matches), with the change switched on, compared match by match with the
+version then live. A paired bootstrap gives the 95% interval on the
+difference in log loss; negative is better.
+
+| Version | Log loss | Accuracy | Change vs live [95% interval] |
+| --- | --- | --- | --- |
+| Live version | 0.9889 | 52.4% | — |
+| + gameweek fix (below) | 0.9895 | 52.2% | +0.0006 [−0.0022, +0.0033] |
+| + Understat expected goals | 0.9879 | 52.4% | −0.0010 [−0.0041, +0.0019] |
+| + injury proxy (regulars missing last match) | 0.9885 | 52.2% | −0.0004 [−0.0035, +0.0028] |
+| + Wikidata manager history | 0.9876 | 52.2% | −0.0013 [−0.0046, +0.0018] |
+| + long-memory xG rating | 0.9886 | 52.6% | −0.0004 [−0.0036, +0.0027] |
+| Everything but the injury proxy and rating | 0.9884 | 52.6% | −0.0005 [−0.0035, +0.0027] |
+
+**None of them is measurably better.** Every interval crosses zero, and
+the differences between variants are the size of what changing the
+column set alone does to a boosted model — removing the injury proxy
+from the best variant made it *worse* by about as much as adding it had
+seemed to. Reading keep-or-drop decisions into differences that size is
+reading noise.
+
+So what shipped was chosen on other grounds. The **gameweek fix** went
+in because it removes a real leak of future results and a real risk of
+the site freezing on a postponed match, at no measurable cost. **Manager
+history from Wikidata** went in because it replaces a hand-kept file that
+covered a season and a half, had errors, and needed editing by hand. xG
+and the injury proxy did not: a daily dependency on another site for no
+measured gain is cost without benefit. The FPL availability log keeps
+recording, because direct injury news is a different and stronger
+signal than the proxy, and it can only be tested once there is history
+to test it on.
+
 ## Known limitations
 
 - **Injuries do not reach the model yet.** Player availability has been
   recorded daily from the FPL API since 30 September 2026, but a column
   with a few weeks of history cannot be trained on, so it is collected
   and not yet used. This remains the largest gap in the model.
-- **Manager history starts at 2025-26.** The features are wired in and
-  correct, but the model has roughly two seasons of matches to learn the
-  effect from. Extending the file backwards is cheap and helps directly.
-- **No expected-goals data.** Shots on target is the stand-in. A real xG
-  feed (Understat or a paid provider) would slot straight into the
-  `match_stats` table.
+- **Manager history is thinner before 2016.** Wikidata covers 98–100%
+  of matches from 2018-19 but 57–68% of 2010–2015; a club with no known
+  spell on a date gets no manager features for it, which the model
+  handles as missing rather than as zero.
+- **No expected-goals data.** Shots on target is the stand-in. Understat
+  xG was built in and tested and did not measurably help this model —
+  see "Tested and not shipped" — so it was left out rather than adding a
+  daily dependency for nothing.
 - **Match statistics lag the live season.** Handled explicitly by
   dropping the affected columns per run, but it does mean the live model
   is thinner than the backtested one.

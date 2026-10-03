@@ -25,6 +25,7 @@ CREATE TABLE matches (
     season        TEXT NOT NULL,
     competition   TEXT NOT NULL,
     matchday      INTEGER,
+    original_matchday INTEGER,
     match_date    TEXT,
     kickoff       TEXT,
     home_team     TEXT NOT NULL,
@@ -79,7 +80,7 @@ CREATE TABLE current_predictions (
 """
 
 MATCH_COLUMNS = (
-    "match_id, season, competition, matchday, match_date, kickoff, "
+    "match_id, season, competition, matchday, original_matchday, match_date, kickoff, "
     "home_team, away_team, home_goals, away_goals, result, status, updated_at"
 )
 

@@ -1,0 +1,47 @@
+# Each club's Wikidata item, used to read its managerial history.
+# Resolved by name and checked by hand; a club missing here (a newly
+# promoted side) is resolved by name at sync time. See
+# plpredict/data/sources/wikidata_managers.py.
+team,wikidata_id
+Arsenal,Q9617
+Aston Villa,Q18711
+Birmingham City,Q19444
+Blackburn Rovers,Q19446
+Blackpool,Q19449
+Bolton Wanderers,Q19451
+Bournemouth,Q19568
+Brentford,Q19571
+Brighton & Hove Albion,Q19453
+Burnley,Q19458
+Cardiff City,Q18662
+Chelsea,Q9616
+Coventry City,Q19580
+Crystal Palace,Q19467
+Everton,Q5794
+Fulham,Q18708
+Huddersfield Town,Q19473
+Hull City,Q19477
+Ipswich Town,Q9653
+Leeds United,Q1128631
+Leicester City,Q19481
+Liverpool,Q1130849
+Luton Town,Q18520
+Manchester City,Q50602
+Manchester United,Q18656
+Middlesbrough,Q18661
+Newcastle United,Q18716
+Norwich City,Q18721
+Nottingham Forest,Q19490
+Queens Park Rangers,Q18723
+Reading,Q18729
+Sheffield United,Q19607
+Southampton,Q18732
+Stoke City,Q18736
+Sunderland,Q18739
+Swansea City,Q18659
+Tottenham Hotspur,Q18741
+Watford,Q2714
+West Bromwich Albion,Q18744
+West Ham United,Q18747
+Wigan Athletic,Q18750
+Wolverhampton Wanderers,Q19500

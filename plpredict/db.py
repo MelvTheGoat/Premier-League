@@ -35,6 +35,7 @@ CREATE TABLE IF NOT EXISTS matches (
     season          TEXT NOT NULL,
     competition     TEXT NOT NULL,
     matchday        INTEGER,
+    original_matchday INTEGER,
     stage           TEXT,
     match_date      TEXT,
     kickoff         TEXT,
@@ -171,6 +172,22 @@ CREATE TABLE IF NOT EXISTS current_predictions (
 """
 
 
+# Columns added after a table was first created. ``CREATE TABLE IF NOT
+# EXISTS`` leaves an existing table alone, so a database built by an
+# earlier version gains them here instead.
+_ADDED_COLUMNS = {
+    "matches": {"original_matchday": "INTEGER"},
+}
+
+
+def _migrate(conn: sqlite3.Connection) -> None:
+    for table, columns in _ADDED_COLUMNS.items():
+        present = {row[1] for row in conn.execute(f"PRAGMA table_info({table})")}
+        for column, kind in columns.items():
+            if column not in present:
+                conn.execute(f"ALTER TABLE {table} ADD COLUMN {column} {kind}")
+
+
 @contextmanager
 def connect(
     path: Path | str | None = None, *, read_only: bool = False
@@ -205,6 +222,7 @@ def connect(
     conn.row_factory = sqlite3.Row
     try:
         conn.executescript(SCHEMA)
+        _migrate(conn)
         yield conn
         conn.commit()
     except Exception:

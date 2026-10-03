@@ -57,6 +57,12 @@ FOOTBALLDATA_REPO = os.environ.get(
 )
 FOOTBALLDATA_CHECKOUT = _path("PLPRED_FOOTBALLDATA_DIR", RAW_DIR / "football-datasets")
 
+# Managerial spells from Wikidata, refreshed daily and committed. The
+# hand-kept data/manual/managers.csv only fills dates this leaves uncovered.
+WIKIDATA_MANAGERS_FILE = _path(
+    "PLPRED_WIKIDATA_MANAGERS", EXTERNAL_DIR / "managers_wikidata.csv"
+)
+
 # Player availability from the Fantasy Premier League API, which reports
 # only the present. The log is how a history accumulates at all, so it is
 # committed alongside the code rather than rebuilt like everything else.

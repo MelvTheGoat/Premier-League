@@ -195,11 +195,6 @@ class TeamState:
 
     # -- congestion ------------------------------------------------------
 
-    def days_since_last_match(self, today: dt.date, cap: float) -> float | None:
-        if not self.match_dates:
-            return None
-        return min((today - self.match_dates[-1]).days, cap)
-
     def matches_within(self, today: dt.date, days: int) -> int:
         cutoff = today - dt.timedelta(days=days)
         return sum(1 for date in self.match_dates if cutoff <= date < today)
