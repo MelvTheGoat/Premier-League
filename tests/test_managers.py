@@ -145,3 +145,56 @@ def test_the_feed_is_parsed():
     </channel></rss>"""
     [headline] = manager_news.parse_feed(raw)
     assert headline.title == "Spurs sack boss" and headline.published == dt.date(2026, 9, 29)
+
+
+# --- the daily sync ------------------------------------------------------
+
+
+def _sync_module():
+    import importlib.util
+    from pathlib import Path
+
+    path = Path(__file__).resolve().parent.parent / "scripts" / "sync_managers.py"
+    spec = importlib.util.spec_from_file_location("sync_managers", path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def _record(n: int) -> list[Spell]:
+    return [Spell(f"Club {i}", f"Manager {i}", "2020-01-01", None) for i in range(n)]
+
+
+def test_the_sync_asks_about_every_pinned_club_even_with_an_empty_database(tmp_path, monkeypatch):
+    """On a fresh runner the sync runs before any match has been loaded."""
+    sync = _sync_module()
+    asked = {}
+
+    def fetch(club_ids):
+        asked.update(club_ids)
+        return _record(10)
+
+    monkeypatch.setattr(config, "WIKIDATA_MANAGERS_FILE", tmp_path / "managers.csv")
+    connect = db.connect
+    monkeypatch.setattr(sync.db, "connect", lambda: connect(tmp_path / "empty.db"))
+    monkeypatch.setattr(sync.wikidata, "fetch_spells", fetch)
+
+    assert sync.main() == 0
+    pinned = wikidata_managers.read_club_ids(config.MANUAL_DIR / "team_wikidata.csv")
+    assert set(asked) == set(pinned) and len(asked) >= 20
+    assert len(wikidata_managers.read(tmp_path / "managers.csv")) == 10
+
+
+def test_a_short_answer_does_not_overwrite_the_record(tmp_path, monkeypatch):
+    sync = _sync_module()
+    output = tmp_path / "managers.csv"
+    wikidata_managers.write(_record(400), output)
+    before = output.read_bytes()
+
+    monkeypatch.setattr(config, "WIKIDATA_MANAGERS_FILE", output)
+    connect = db.connect
+    monkeypatch.setattr(sync.db, "connect", lambda: connect(tmp_path / "empty.db"))
+    for answer in ([], _record(150)):
+        monkeypatch.setattr(sync.wikidata, "fetch_spells", lambda ids, answer=answer: answer)
+        assert sync.main() == 0
+        assert output.read_bytes() == before

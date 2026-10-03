@@ -24,6 +24,10 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from plpredict import config, db  # noqa: E402
 from plpredict.data.sources import wikidata_managers as wikidata  # noqa: E402
 
+# A refresh returning fewer spells than this share of the existing record
+# is treated as a failed fetch.
+MIN_SHARE_KEPT = 0.5
+
 
 def _report(changed: bool) -> None:
     value = "true" if changed else "false"
@@ -38,6 +42,9 @@ def main() -> int:
     output = Path(config.WIKIDATA_MANAGERS_FILE)
     club_ids = wikidata.read_club_ids(config.MANUAL_DIR / "team_wikidata.csv")
 
+    # The club list comes from the pinned mapping, plus any club in the
+    # fixture list not yet pinned. It must not depend on the database
+    # alone: on a fresh runner this runs before the database is built.
     with db.connect() as conn:
         team_dates = [
             (row[0], row[1])
@@ -52,7 +59,8 @@ def main() -> int:
                 (config.TARGET_COMPETITION, config.FIRST_TRAINING_SEASON) * 2,
             )
         ]
-    clubs = sorted({team for team, _ in team_dates})
+    clubs = sorted(set(club_ids) | {team for team, _ in team_dates})
+    existing = wikidata.read(output)
 
     try:
         unpinned = [team for team in clubs if team not in club_ids]
@@ -69,14 +77,28 @@ def main() -> int:
         _report(False)
         return 0
 
+    # A partial answer is far more likely to be a failed query than a mass
+    # sacking. Keep the record rather than overwrite it with less of it.
+    if len(spells) < MIN_SHARE_KEPT * len(existing) or not spells:
+        print(
+            f"warning: Wikidata returned {len(spells)} spells against {len(existing)} "
+            "on record; keeping the existing file"
+        )
+        _report(False)
+        return 0
+
     before = output.read_bytes() if output.is_file() else b""
     wikidata.write(spells, output)
     changed = output.read_bytes() != before
 
-    print(
-        f"{len(spells)} spells for {len({s.team for s in spells})} clubs; "
-        f"{wikidata.coverage(spells, team_dates):.1%} of league matches since "
+    covered = (
+        f"; {wikidata.coverage(spells, team_dates):.1%} of league matches since "
         f"{config.FIRST_TRAINING_SEASON} fall inside a known spell"
+        if team_dates
+        else ""
+    )
+    print(
+        f"{len(spells)} spells for {len({s.team for s in spells})} clubs{covered}"
         + ("" if changed else "; unchanged")
     )
     _report(changed)
