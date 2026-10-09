@@ -566,7 +566,7 @@ can be overridden by environment variable:
 
 | Variable | Default | Meaning |
 | --- | --- | --- |
-| `PLPRED_SEASON` | `2026-27` | Season being predicted |
+| `PLPRED_SEASON` | from the date: rolls over on 1 August | Season being predicted |
 | `PLPRED_FIRST_SEASON` | `2010-11` | Earliest season in the training corpus |
 | `PLPRED_DB` | `data/db/plpredict.db` | SQLite database |
 | `PLPRED_DATA_DIR` | `data/` | Root for raw, manual and external data |

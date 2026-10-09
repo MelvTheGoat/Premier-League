@@ -10,6 +10,7 @@ the scheduled job configurable without editing code.
 
 from __future__ import annotations
 
+import datetime as dt
 import os
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -33,9 +34,23 @@ DB_PATH = _path("PLPRED_DB", DATA_DIR / "db" / "plpredict.db")
 WEB_DB_PATH = _path("PLPRED_WEB_DB", DATA_DIR / "web" / "plpredict-web.db")
 MODEL_DIR = _path("PLPRED_MODEL_DIR", PROJECT_ROOT / "models" / "artifacts")
 
-# The season the platform is currently predicting, in openfootball's
-# "YYYY-YY" directory form.
-CURRENT_SEASON = os.environ.get("PLPRED_SEASON", "2026-27")
+
+def season_for(today: dt.date) -> str:
+    """The season being predicted on ``today``, in openfootball's "YYYY-YY" form.
+
+    Seasons run from August to May. The new one becomes current on 1
+    August: its fixtures are published in June, so they are in the source
+    by then, and its opening gameweek is forecast before kick-off in mid
+    August. Through June and July the finished season stays current and
+    the scheduled job has nothing to do. Deriving it from the date, rather
+    than writing it down, is what lets the job carry on from one season to
+    the next with nobody editing anything.
+    """
+    start = today.year if today.month >= 8 else today.year - 1
+    return f"{start}-{(start + 1) % 100:02d}"
+
+
+CURRENT_SEASON = os.environ.get("PLPRED_SEASON") or season_for(dt.date.today())
 
 # Earliest season pulled into the training corpus. Ten-plus years of
 # matches is enough for the outcome model without dragging in an era of

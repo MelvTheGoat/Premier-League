@@ -129,3 +129,13 @@ def test_a_double_gameweek_second_match_sees_the_first(tmp_path):
     assert tuesday["away_rest_days"] == 3.0           # since Saturday, not since round 1
     assert frame.loc["w2a", "home_gameweek_fixtures"] == 2.0
     assert frame.loc["w2b", "home_gameweek_fixtures"] == 1.0
+
+
+def test_the_season_rolls_over_by_itself_on_1_august():
+    from plpredict.config import season_for
+
+    assert season_for(dt.date(2026, 10, 9)) == "2026-27"
+    assert season_for(dt.date(2027, 5, 23)) == "2026-27"  # final day
+    assert season_for(dt.date(2027, 7, 31)) == "2026-27"  # summer: nothing to do
+    assert season_for(dt.date(2027, 8, 1)) == "2027-28"   # fixtures out, kick-off ahead
+    assert season_for(dt.date(2099, 9, 1)) == "2099-00"

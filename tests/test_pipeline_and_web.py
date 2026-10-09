@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import datetime as dt
+
 import pandas as pd
 import pytest
 
@@ -403,6 +405,16 @@ def test_a_prediction_stored_after_kickoff_is_flagged(scratch_db):
     """A late forecast must not be displayed as though it were live."""
     with db.connect(scratch_db) as conn:
         upcoming = next_unplayed_gameweek(conn, SEASON)
+        # The synthetic season has fixed dates, which the calendar overtakes;
+        # put this gameweek ahead of today so the stored run precedes it.
+        ahead = (dt.date.today() + dt.timedelta(days=30)).isoformat()
+        conn.execute(
+            """
+            UPDATE matches SET match_date = ?
+            WHERE season = ? AND matchday = ? AND competition = 'premier_league'
+            """,
+            (ahead, SEASON, upcoming),
+        )
         before = queries.gameweek(conn, SEASON, upcoming)
         assert before["published_late"] is False
 
