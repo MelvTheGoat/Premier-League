@@ -678,3 +678,19 @@ observed_at,season,fpl_next_event,player_code,player_id,web_name,position,fpl_te
 2026-10-06T12:45:00Z,2026-27,6,616077,20,Dowman,MID,Arsenal,d,75,,Unspecified injury - 75% chance of playing,2026-10-05T19:00:10.141532Z
 2026-10-06T12:45:00Z,2026-27,6,606702,362,Jacquet,DEF,Liverpool,d,75,100,Hamstring injury - 75% chance of playing,2026-10-06T00:30:10.323830Z
 2026-10-07T12:39:03Z,2026-27,6,554578,444,Jaouen,GKP,Newcastle,i,0,50,Hamstring injury - Unknown return date,2026-09-10T16:00:09.127466Z
+2026-10-09T12:34:36Z,2026-27,6,503139,69,Scott,MID,Bournemouth,i,0,,Thigh injury - Unknown return date,2026-10-05T09:30:09.910752Z
+2026-10-09T12:34:36Z,2026-27,6,83299,116,Dunk,DEF,Brighton,a,100,,,2026-09-22T09:30:09.629652Z
+2026-10-09T12:34:36Z,2026-27,6,532529,123,Hinshelwood,MID,Brighton,d,50,0,Ankle injury - 50% chance of playing,2026-08-27T19:30:07.780933Z
+2026-10-09T12:34:36Z,2026-27,6,465390,177,Kesler-Hayden,DEF,Coventry City,d,50,0,Hamstring injury - 50% chance of playing,2026-08-27T14:56:28.704361Z
+2026-10-09T12:34:36Z,2026-27,6,169528,254,Robinson,DEF,Fulham,d,75,,Ankle injury - 75% chance of playing,2026-10-09T11:30:11.109085Z
+2026-10-09T12:34:36Z,2026-27,6,76357,266,Cairney,MID,Fulham,i,0,0,Knee injury - Expected back 17 Oct,2026-08-14T18:00:06.460944Z
+2026-10-09T12:34:36Z,2026-27,6,153682,260,Wilson,MID,Leeds,d,75,0,Thigh injury - 75% chance of playing,2026-09-18T13:30:09.626858Z
+2026-10-09T12:34:36Z,2026-27,6,200617,343,James,MID,Leeds,i,0,,Back injury - Expected back 18 Oct,2026-10-08T14:00:11.803126Z
+2026-10-09T12:34:36Z,2026-27,6,587982,648,Bahoya,MID,Leeds,d,75,,Ankle injury - 75% chance of playing,2026-10-08T14:00:12.276121Z
+2026-10-09T12:34:36Z,2026-27,6,441191,450,Livramento,DEF,Newcastle,d,50,100,Unspecified injury - 50% chance of playing,2026-09-19T14:00:09.046677Z
+2026-10-09T12:34:36Z,2026-27,6,180974,458,Joelinton,MID,Newcastle,d,75,0,Unspecified injury - 75% chance of playing,2026-08-16T08:00:08.074045Z
+2026-10-09T12:34:36Z,2026-27,6,538207,465,Osula,FWD,Newcastle,d,50,0,Foot injury - 50% chance of playing,2026-08-25T19:00:08.004915Z
+2026-10-09T12:34:36Z,2026-27,6,463726,593,Dedić,DEF,Newcastle,d,50,0,Unspecified injury - 50% chance of playing,2026-09-17T14:30:09.823731Z
+2026-10-09T12:34:36Z,2026-27,6,223827,532,Ballard,DEF,Sunderland,i,0,,Hamstring injury - Unknown return date,2026-09-25T21:30:10.370384Z
+2026-10-09T12:34:36Z,2026-27,6,547027,543,Diarra,MID,Sunderland,i,0,0,Hamstring injury - Expected back 18 Oct,2026-08-30T16:30:08.428960Z
+2026-10-09T12:34:36Z,2026-27,6,441264,552,Brobbey,FWD,Sunderland,i,0,,Hamstring injury - Expected back 25 Oct,2026-09-24T21:30:10.382142Z
